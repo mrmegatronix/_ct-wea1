@@ -1,0 +1,8 @@
+{
+  "name": "Christchurch Weather Dashboard",
+  "description": "A glassmorphism weather dashboard displaying current conditions and a 7-day atmospheric forecast.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
