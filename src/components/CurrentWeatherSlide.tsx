@@ -1,6 +1,7 @@
 import React from 'react';
 import { Droplets, Sun, Wind, Eye, Moon, Navigation } from 'lucide-react';
-import { getWeatherIcon, getWeatherCondition, getUVDescriptor, getMoonPhase } from '../utils/weather';
+import { getWeatherCondition, getUVDescriptor, getMoonPhase } from '../utils/weather';
+import { AnimatedWeatherIcon } from './AnimatedWeatherIcon';
 
 interface CurrentWeatherData {
   temp: number;
@@ -22,14 +23,17 @@ interface Props {
 }
 
 export function CurrentWeatherSlide({ isActive, current, todayHigh, todayLow }: Props) {
-  const IconComponent = getWeatherIcon(current.weatherCode, current.isDay);
   const conditionText = getWeatherCondition(current.weatherCode);
 
   return (
     <div className={`absolute inset-0 px-4 md:px-16 pb-16 slide-transition flex flex-col justify-center items-center ${isActive ? 'slide-active' : 'slide-exit pointer-events-none opacity-0'}`}>
       <div className="glass-panel w-full max-w-7xl rounded-[2rem] md:rounded-[3rem] p-8 md:p-12 flex flex-col items-center border border-white/10">
         <div className="flex flex-col md:flex-row items-center gap-8 md:gap-16 mb-8">
-          <IconComponent className="w-32 h-32 md:w-48 md:h-48 text-primary animate-float" strokeWidth={1} />
+          <AnimatedWeatherIcon 
+            code={current.weatherCode} 
+            isDay={current.isDay} 
+            className="w-32 h-32 md:w-48 md:h-48"
+          />
           <span className="text-[150px] md:text-[250px] font-display-temp font-bold text-primary-fixed leading-none tracking-tighter">
             {current.temp}°
           </span>

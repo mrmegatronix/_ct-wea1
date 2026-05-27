@@ -3,7 +3,7 @@ import { Background } from './components/Background';
 import { Header } from './components/Header';
 import { CurrentWeatherSlide } from './components/CurrentWeatherSlide';
 import { ForecastSlide } from './components/ForecastSlide';
-import { CloudRain, AlertTriangle } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
 
 interface CurrentWeatherData {
   temp: number;
@@ -52,7 +52,14 @@ export default function App() {
           forecast_days: '7'
         });
 
-        const res = await fetch(`https://api.open-meteo.com/v1/forecast?${params}&t=${Date.now()}`);
+        // Cache-busting parameter and no-store headers to ensure only live data is used
+        const res = await fetch(`https://api.open-meteo.com/v1/forecast?${params}&t=${Date.now()}`, {
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+          }
+        });
         if (!res.ok) throw new Error('Failed to fetch from weather API');
         const data = await res.json();
 
@@ -92,7 +99,7 @@ export default function App() {
     }
 
     fetchWeather();
-    const refreshInterval = setInterval(fetchWeather, 15 * 60 * 1000); // refresh every 15 mins
+    const refreshInterval = setInterval(fetchWeather, 10 * 60 * 1000); // refresh every 10 minutes
     return () => clearInterval(refreshInterval);
   }, []);
 
@@ -116,9 +123,16 @@ export default function App() {
     };
   }, [currentSlide, loading, error]);
 
+  const currentHour = new Date().getHours();
+  const isDayGuess = currentHour >= 6 && currentHour < 18;
+  const weatherCodeGuess = 0;
+
   return (
     <div className="bg-background text-on-surface font-body-md overflow-hidden w-screen h-screen flex flex-col relative text-white">
-      <Background />
+      <Background 
+        isDay={weather ? weather.current.isDay : isDayGuess} 
+        weatherCode={weather ? weather.current.weatherCode : weatherCodeGuess} 
+      />
       <Header />
       
       <main className="flex-1 relative px-4 md:px-16 pb-16 z-10 w-full h-full flex items-center justify-center">

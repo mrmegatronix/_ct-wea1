@@ -1,5 +1,5 @@
 import { Droplets } from 'lucide-react';
-import { getWeatherIcon } from '../utils/weather';
+import { AnimatedWeatherIcon } from './AnimatedWeatherIcon';
 
 interface DailyForecast {
   day: string;
@@ -23,7 +23,6 @@ export function ForecastSlide({ isActive, forecasts }: Props) {
         </h2>
         <div className="flex gap-4 md:gap-6 w-full items-stretch justify-center pb-6 overflow-x-auto select-none">
           {forecasts.map((f, i) => {
-            const IconComponent = getWeatherIcon(f.weatherCode, true);
             const isToday = f.day === 'Today';
             return (
               <div 
@@ -36,13 +35,14 @@ export function ForecastSlide({ isActive, forecasts }: Props) {
                 </span>
                 
                 <div className="my-6 md:my-10 flex items-center justify-center">
-                  <IconComponent 
-                    className="w-16 h-16 md:w-28 md:h-28 text-on-surface animate-float" 
+                  <AnimatedWeatherIcon 
+                    code={f.weatherCode} 
+                    isDay={true} 
+                    className="w-16 h-16 md:w-28 md:h-28" 
                     style={{ 
                       animationDelay: `${i * 0.4}s`,
                       filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.3))' 
-                    }} 
-                    strokeWidth={1} 
+                    }}
                   />
                 </div>
                 

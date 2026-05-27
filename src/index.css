@@ -29,18 +29,42 @@
 @layer utilities {
     .glass-panel {
         background-color: rgba(26, 28, 31, 0.4);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: inset 1px 1px 0 0 rgba(255,255,255,0.05);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: inset 1px 1px 0 0 rgba(255,255,255,0.05), 
+                    0 15px 35px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Dynamic Gradients */
+    .bg-weather-night {
+        background: linear-gradient(180deg, #090e18 0%, #030408 100%);
+    }
+    .bg-weather-sunrise {
+        background: linear-gradient(180deg, #f2709c 0%, #ff9472 50%, #1A2A3A 100%);
+    }
+    .bg-weather-sunset {
+        background: linear-gradient(180deg, #e65c00 0%, #F9D423 50%, #111316 100%);
+    }
+    .bg-weather-day-clear {
+        background: linear-gradient(180deg, #1e88e5 0%, #1565c0 60%, #111316 100%);
+    }
+    .bg-weather-cloudy {
+        background: linear-gradient(180deg, #37474f 0%, #263238 60%, #111316 100%);
+    }
+    .bg-weather-rainy {
+        background: linear-gradient(180deg, #1f2937 0%, #111827 60%, #0d0f12 100%);
+    }
+    .bg-weather-stormy {
+        background: linear-gradient(180deg, #111827 0%, #030712 100%);
     }
 
     .bg-dynamic-weather {
-        background: linear-gradient(180deg, #1A2A3A 0%, #111316 100%);
         position: fixed;
         top: 0; left: 0; width: 100%; height: 100%;
         z-index: -1;
         overflow: hidden;
+        transition: background 2s ease-in-out;
     }
     
     .aurora-bg {
@@ -49,25 +73,43 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: radial-gradient(circle at 50% 0%, rgba(33, 150, 243, 0.15) 0%, transparent 50%),
-                    radial-gradient(circle at 80% 20%, rgba(0, 176, 255, 0.1) 0%, transparent 40%);
-        animation: aurora-shift 20s ease-in-out infinite alternate;
+        background: radial-gradient(circle at 50% 0%, rgba(33, 150, 243, 0.15) 0%, transparent 60%),
+                    radial-gradient(circle at 80% 20%, rgba(0, 176, 255, 0.1) 0%, transparent 50%);
+        animation: aurora-shift 25s ease-in-out infinite alternate;
+    }
+
+    /* Star Field for Night Mode */
+    .starfield {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background-image: 
+            radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+            radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
+            radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 40px);
+        background-size: 550px 550px, 350px 350px, 250px 250px;
+        background-position: 0 0, 40px 60px, 130px 270px;
+        opacity: 0;
+        transition: opacity 2s ease-in-out;
+    }
+
+    .starfield-visible {
+        opacity: 0.35;
     }
 
     .cloud {
         position: absolute;
-        background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 70%);
+        background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 70%);
         border-radius: 50%;
         animation: drift linear infinite;
     }
 
     .slide-transition {
-        transition: opacity 1.5s ease-in-out, transform 1.5s ease-in-out;
+        transition: opacity 1.2s ease-in-out, transform 1.2s ease-in-out;
     }
 
     .slide-enter {
         opacity: 0;
-        transform: scale(0.95);
+        transform: scale(0.96);
     }
 
     .slide-active {
@@ -77,46 +119,101 @@
 
     .slide-exit {
         opacity: 0;
-        transform: scale(1.05);
+        transform: scale(1.04);
     }
 
     .blink {
         animation: blinker 1s linear infinite;
     }
 
-    .animate-float {
-        animation: float 6s ease-in-out infinite;
-    }
-
     .progress-bar-fill {
         transition-property: width;
         transition-timing-function: linear;
     }
+
+    /* Weather Icon Animations */
+    .icon-spin {
+        animation: spin-clockwise 25s linear infinite;
+        transform-origin: center;
+    }
+
+    .icon-float {
+        animation: weather-float 6s ease-in-out infinite;
+    }
+
+    .icon-drift-left-right {
+        animation: icon-drift 8s ease-in-out infinite alternate;
+    }
+
+    .icon-rain-drop {
+        animation: rain-fall 1.5s ease-in linear infinite;
+        transform-origin: center;
+    }
+
+    .icon-snow-flake {
+        animation: snow-fall 3s ease-in-out linear infinite;
+        transform-origin: center;
+    }
+
+    .icon-lightning-flash {
+        animation: lightning-strike 4s ease-in-out infinite;
+        transform-origin: center;
+    }
 }
 
+/* Keyframes */
 @keyframes drift {
     from { transform: translateX(-100%); }
     to { transform: translateX(100vw); }
 }
 
+@keyframes icon-drift {
+    0% { transform: translateX(-4px); }
+    100% { transform: translateX(4px); }
+}
+
+@keyframes spin-clockwise {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes weather-float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+@keyframes rain-fall {
+    0% { transform: translateY(-6px); opacity: 0; }
+    30% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { transform: translateY(18px); opacity: 0; }
+}
+
+@keyframes snow-fall {
+    0% { transform: translateY(-6px) translateX(0) rotate(0deg); opacity: 0; }
+    30% { opacity: 1; }
+    80% { opacity: 0.8; }
+    100% { transform: translateY(18px) translateX(6px) rotate(180deg); opacity: 0; }
+}
+
+@keyframes lightning-strike {
+    0%, 85%, 90%, 100% { opacity: 0; }
+    87%, 93% { opacity: 1; filter: drop-shadow(0 0 8px #ffd54f); }
+}
+
 @keyframes aurora-shift {
-    0% { transform: scale(1) translate(0, 0); opacity: 0.5; }
-    50% { transform: scale(1.2) translate(-5%, 5%); opacity: 0.8; }
-    100% { transform: scale(1) translate(5%, -5%); opacity: 0.5; }
+    0% { transform: scale(1) translate(0, 0); opacity: 0.4; }
+    50% { transform: scale(1.15) translate(-3%, 3%); opacity: 0.7; }
+    100% { transform: scale(1) translate(3%, -3%); opacity: 0.4; }
 }
 
 @keyframes blinker {
     50% { opacity: 0; }
 }
 
-@keyframes float {
-    0% { transform: translateY(0px); }
-    50% { transform: translateY(-15px); }
-    100% { transform: translateY(0px); }
-}
-
 @media (prefers-reduced-motion: reduce) {
-    .cloud, .aurora-bg, .animate-float, .blink {
+    .cloud, .aurora-bg, .starfield, .icon-spin, .icon-float, .icon-drift-left-right, .icon-rain-drop, .icon-snow-flake, .icon-lightning-flash, .blink {
         animation: none !important;
         transform: none !important;
     }

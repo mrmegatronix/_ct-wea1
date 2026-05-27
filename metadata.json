@@ -1,5 +1,5 @@
 {
-  "name": "Christchurch Weather Dashboard",
+  "name": "Christchurch Weather App",
   "description": "A glassmorphism weather dashboard displaying current conditions and a 7-day atmospheric forecast.",
   "requestFramePermissions": [],
   "majorCapabilities": [
