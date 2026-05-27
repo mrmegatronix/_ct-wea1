@@ -52,14 +52,8 @@ export default function App() {
           forecast_days: '7'
         });
 
-        // Cache-busting parameter and no-store headers to ensure only live data is used
-        const res = await fetch(`https://api.open-meteo.com/v1/forecast?${params}&t=${Date.now()}`, {
-          headers: {
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
-            'Pragma': 'no-cache',
-            'Expires': '0'
-          }
-        });
+        // Cache-busting parameter to ensure only live data is used
+        const res = await fetch(`https://api.open-meteo.com/v1/forecast?${params}&t=${Date.now()}`);
         if (!res.ok) throw new Error('Failed to fetch from weather API');
         const data = await res.json();
 
