@@ -93,3 +93,13 @@ export function getMoonPhase(): string {
   if (age < 27.68493) return "Waning Cres";
   return "New";
 }
+
+export function getWindCompassDirection(deg: number): string {
+  const index = Math.round(((deg % 360) / 22.5));
+  const directions = [
+    "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+    "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"
+  ];
+  return directions[index % 16];
+}
+

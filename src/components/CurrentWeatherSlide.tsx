@@ -1,6 +1,6 @@
 import React from 'react';
 import { Droplets, Sun, Wind, Eye, Moon, Navigation } from 'lucide-react';
-import { getWeatherCondition, getUVDescriptor, getMoonPhase } from '../utils/weather';
+import { getWeatherCondition, getUVDescriptor, getMoonPhase, getWindCompassDirection } from '../utils/weather';
 import { AnimatedWeatherIcon } from './AnimatedWeatherIcon';
 
 interface CurrentWeatherData {
@@ -64,7 +64,7 @@ export function CurrentWeatherSlide({ isActive, current, todayHigh, todayLow }: 
               </div>
             } 
             label="Wind" 
-            value={`${current.windSpeed} km/h`} 
+            value={`${current.windSpeed} km/h ${getWindCompassDirection(current.windDirection)}`} 
           />
           <MetricCard icon={<Eye className="text-primary-fixed-dim w-8 h-8 md:w-10 md:h-10 mb-2" />} label="Vis" value={`${current.visibility} km`} />
           <MetricCard icon={<Moon className="text-surface-tint w-8 h-8 md:w-10 md:h-10 mb-2" />} label="Moon" value={getMoonPhase()} />
