@@ -166,6 +166,7 @@ export default function App() {
               current={weather.current}
               todayHigh={weather.forecast[0].high}
               todayLow={weather.forecast[0].low}
+              todayRain={weather.forecast[0].rain}
             />
             <ForecastSlide 
               isActive={currentSlide === 2} 

@@ -20,9 +20,10 @@ interface Props {
   current: CurrentWeatherData;
   todayHigh: number;
   todayLow: number;
+  todayRain: number;
 }
 
-export function CurrentWeatherSlide({ isActive, current, todayHigh, todayLow }: Props) {
+export function CurrentWeatherSlide({ isActive, current, todayHigh, todayLow, todayRain }: Props) {
   const conditionText = getWeatherCondition(current.weatherCode);
 
   return (
@@ -46,7 +47,7 @@ export function CurrentWeatherSlide({ isActive, current, todayHigh, todayLow }: 
             <span className="text-on-surface/30">|</span>
             <span className="text-clear-blue flex items-center">
               <Droplets className="w-8 h-8 md:w-12 md:h-12 mr-2" strokeWidth={1.5} />
-              {current.precipitation > 0 ? `${current.precipitation.toFixed(1)} mm` : '0%'}
+              {todayRain}%
             </span>
           </p>
         </div>
