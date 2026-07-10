@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Background } from './components/Background';
 import { Header } from './components/Header';
 import { CurrentWeatherSlide } from './components/CurrentWeatherSlide';
+import { HourlyForecastSlide } from './components/HourlyForecastSlide';
 import { ForecastSlide } from './components/ForecastSlide';
 import { AlertTriangle } from 'lucide-react';
 
@@ -17,6 +18,13 @@ interface CurrentWeatherData {
   uvIndex: number;
 }
 
+interface HourlyForecast {
+  time: string;
+  temp: number;
+  weatherCode: number;
+  rainProb: number;
+}
+
 interface DailyForecast {
   day: string;
   weatherCode: number;
@@ -28,6 +36,7 @@ interface DailyForecast {
 interface WeatherState {
   current: CurrentWeatherData;
   forecast: DailyForecast[];
+  hourly: HourlyForecast[];
 }
 
 export default function App() {
@@ -48,6 +57,7 @@ export default function App() {
           longitude: '172.6362',
           current: 'temperature_2m,relative_humidity_2m,is_day,precipitation,weather_code,wind_speed_10m,wind_direction_10m,visibility',
           daily: 'temperature_2m_max,temperature_2m_min,weather_code,uv_index_max,precipitation_probability_max',
+          hourly: 'temperature_2m,weather_code,precipitation_probability',
           timezone: 'Pacific/Auckland',
           forecast_days: '7'
         });
@@ -63,25 +73,45 @@ export default function App() {
           return {
             day: dayName,
             weatherCode: data.daily.weather_code[idx],
-            high: Math.round(data.daily.temperature_2m_max[idx]),
-            low: Math.round(data.daily.temperature_2m_min[idx]),
+            high: data.daily.temperature_2m_max[idx],
+            low: data.daily.temperature_2m_min[idx],
             rain: data.daily.precipitation_probability_max ? data.daily.precipitation_probability_max[idx] : 0
           };
         });
 
+        const now = new Date();
+        const currentHourISO = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}T${String(now.getHours()).padStart(2, '0')}:00`;
+        let startIndex = data.hourly.time.findIndex((t: string) => t >= currentHourISO);
+        if (startIndex === -1) {
+          startIndex = 0;
+        }
+        const hourlyForecasts: HourlyForecast[] = [];
+        for (let i = startIndex; i < startIndex + 8 && i < data.hourly.time.length; i++) {
+          const timeStr = data.hourly.time[i];
+          const date = new Date(timeStr);
+          const displayTime = date.toLocaleTimeString('en-NZ', { hour: 'numeric', minute: '2-digit', hour12: true });
+          hourlyForecasts.push({
+            time: displayTime,
+            temp: data.hourly.temperature_2m[i],
+            weatherCode: data.hourly.weather_code[i],
+            rainProb: data.hourly.precipitation_probability ? data.hourly.precipitation_probability[i] : 0
+          });
+        }
+
         setWeather({
           current: {
-            temp: Math.round(data.current.temperature_2m),
+            temp: data.current.temperature_2m,
             isDay: data.current.is_day === 1,
             weatherCode: data.current.weather_code,
-            windSpeed: Math.round(data.current.wind_speed_10m),
+            windSpeed: data.current.wind_speed_10m,
             windDirection: data.current.wind_direction_10m,
             precipitation: data.current.precipitation,
             humidity: data.current.relative_humidity_2m,
-            visibility: Math.round(data.current.visibility / 1000), // convert m to km
+            visibility: data.current.visibility / 1000, // convert m to km
             uvIndex: data.daily.uv_index_max[0] || 0
           },
-          forecast: dailyForecasts
+          forecast: dailyForecasts,
+          hourly: hourlyForecasts
         });
         setLoading(false);
         setError(false);
@@ -108,7 +138,11 @@ export default function App() {
     }, 50);
 
     const timeout2 = setTimeout(() => {
-      setCurrentSlide((prev) => (prev === 1 ? 2 : 1));
+      setCurrentSlide((prev) => {
+        if (prev === 1) return 2;
+        if (prev === 2) return 3;
+        return 1;
+      });
     }, SLIDE_DURATION);
 
     return () => {
@@ -168,8 +202,12 @@ export default function App() {
               todayLow={weather.forecast[0].low}
               todayRain={weather.forecast[0].rain}
             />
-            <ForecastSlide 
+            <HourlyForecastSlide 
               isActive={currentSlide === 2} 
+              hourly={weather.hourly}
+            />
+            <ForecastSlide 
+              isActive={currentSlide === 3} 
               forecasts={weather.forecast}
             />
           </>

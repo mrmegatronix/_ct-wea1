@@ -36,14 +36,14 @@ export function CurrentWeatherSlide({ isActive, current, todayHigh, todayLow, to
             className="w-32 h-32 md:w-48 md:h-48"
           />
           <span className="text-[150px] md:text-[250px] font-display-temp font-bold text-primary-fixed leading-none tracking-tighter">
-            {current.temp}°
+            {current.temp.toFixed(1)}°
           </span>
         </div>
         
         <div className="text-center mb-10 md:mb-16">
           <h2 className="text-5xl md:text-7xl font-headline-lg font-bold text-on-surface mb-4">{conditionText}</h2>
           <p className="text-3xl md:text-5xl font-body-lg text-on-surface/60 flex items-center justify-center gap-4">
-            <span>H: {todayHigh}°  L: {todayLow}°</span>
+            <span>H: {todayHigh.toFixed(1)}°  L: {todayLow.toFixed(1)}°</span>
             <span className="text-on-surface/30">|</span>
             <span className="text-clear-blue flex items-center">
               <Droplets className="w-8 h-8 md:w-12 md:h-12 mr-2" strokeWidth={1.5} />
@@ -65,9 +65,10 @@ export function CurrentWeatherSlide({ isActive, current, todayHigh, todayLow, to
               </div>
             } 
             label="Wind" 
-            value={`${current.windSpeed} km/h ${getWindCompassDirection(current.windDirection)}`} 
+            value={`${current.windSpeed.toFixed(1)} km/h ${getWindCompassDirection(current.windDirection)}`} 
           />
-          <MetricCard icon={<Eye className="text-primary-fixed-dim w-8 h-8 md:w-10 md:h-10 mb-2" />} label="Vis" value={`${current.visibility} km`} />
+          <MetricCard icon={<Eye className="text-primary-fixed-dim w-8 h-8 md:w-10 md:h-10 mb-2" />} label="Vis" value={`${current.visibility.toFixed(1)} km`} />
+          <MetricCard icon={<Droplets className="text-clear-blue w-8 h-8 md:w-10 md:h-10 mb-2" />} label="Precip" value={`${current.precipitation.toFixed(1)} mm`} />
           <MetricCard icon={<Moon className="text-surface-tint w-8 h-8 md:w-10 md:h-10 mb-2" />} label="Moon" value={getMoonPhase()} />
         </div>
       </div>

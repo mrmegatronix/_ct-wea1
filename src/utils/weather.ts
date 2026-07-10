@@ -70,11 +70,12 @@ export function getWeatherCondition(code: number): string {
 }
 
 export function getUVDescriptor(uv: number): string {
-  if (uv <= 2) return `${Math.round(uv)} Low`;
-  if (uv <= 5) return `${Math.round(uv)} Mod`;
-  if (uv <= 7) return `${Math.round(uv)} High`;
-  if (uv <= 10) return `${Math.round(uv)} Very High`;
-  return `${Math.round(uv)} Ext`;
+  const rounded = uv.toFixed(1);
+  if (uv <= 2) return `${rounded} Low`;
+  if (uv <= 5) return `${rounded} Mod`;
+  if (uv <= 7) return `${rounded} High`;
+  if (uv <= 10) return `${rounded} Very High`;
+  return `${rounded} Ext`;
 }
 
 export function getMoonPhase(): string {
