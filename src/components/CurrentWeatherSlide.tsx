@@ -35,24 +35,24 @@ export function CurrentWeatherSlide({ isActive, current, todayHigh, todayLow, to
             isDay={current.isDay} 
             className="w-32 h-32 md:w-48 md:h-48"
           />
-          <span className="text-[150px] md:text-[250px] font-display-temp font-bold text-primary-fixed leading-none tracking-tighter">
+          <span className="text-[100px] md:text-[160px] lg:text-[200px] font-display-temp font-bold text-primary-fixed leading-none tracking-tighter">
             {current.temp.toFixed(1)}°
           </span>
         </div>
         
-        <div className="text-center mb-10 md:mb-16">
-          <h2 className="text-5xl md:text-7xl font-headline-lg font-bold text-on-surface mb-4">{conditionText}</h2>
-          <p className="text-3xl md:text-5xl font-body-lg text-on-surface/60 flex items-center justify-center gap-4">
+        <div className="text-center mb-8 md:mb-10">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-headline-lg font-bold text-on-surface mb-2">{conditionText}</h2>
+          <p className="text-2xl md:text-3xl lg:text-4xl font-body-lg text-on-surface/60 flex items-center justify-center gap-4">
             <span>H: {todayHigh.toFixed(1)}°  L: {todayLow.toFixed(1)}°</span>
             <span className="text-on-surface/30">|</span>
             <span className="text-clear-blue flex items-center">
-              <Droplets className="w-8 h-8 md:w-12 md:h-12 mr-2" strokeWidth={1.5} />
+              <Droplets className="w-6 h-6 md:w-8 md:h-8 mr-2" strokeWidth={1.5} />
               {todayRain}%
             </span>
           </p>
         </div>
 
-        <div className="flex flex-wrap md:flex-nowrap justify-center gap-4 w-full max-w-full">
+        <div className="flex flex-wrap justify-center gap-3 md:gap-4 w-full max-w-full">
           <MetricCard icon={<Droplets className="text-secondary-fixed w-8 h-8 md:w-10 md:h-10 mb-2" />} label="Humidity" value={`${current.humidity}%`} />
           <MetricCard icon={<Sun className="text-sunset-orange w-8 h-8 md:w-10 md:h-10 mb-2" />} label="UV Index" value={getUVDescriptor(current.uvIndex)} />
           <MetricCard 
@@ -78,10 +78,10 @@ export function CurrentWeatherSlide({ isActive, current, todayHigh, todayLow, to
 
 function MetricCard({ icon, label, value }: { icon: React.ReactNode, label: string, value: string }) {
   return (
-    <div className="glass-panel rounded-2xl p-4 lg:p-6 flex flex-col items-center flex-1 min-w-[120px] justify-center text-center">
-      {icon}
-      <span className="text-xs md:text-lg text-on-surface/60 mb-1 uppercase tracking-widest whitespace-nowrap">{label}</span>
-      <span className="text-xl md:text-3xl font-bold whitespace-nowrap">{value}</span>
+    <div className="glass-panel rounded-2xl p-3 md:p-4 flex flex-col items-center flex-1 min-w-[110px] md:min-w-[130px] justify-center text-center">
+      <div className="scale-90 md:scale-100 flex items-center justify-center">{icon}</div>
+      <span className="text-[10px] md:text-xs text-on-surface/60 mb-1 uppercase tracking-widest whitespace-nowrap">{label}</span>
+      <span className="text-sm md:text-lg lg:text-xl font-bold whitespace-nowrap">{value}</span>
     </div>
   );
 }
