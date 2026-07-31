@@ -16,6 +16,8 @@ interface Props {
 export function HourlyForecastSlide({ isActive, hourly }: Props) {
   return (
     <div className={`absolute inset-0 px-4 md:px-8 pb-16 slide-transition flex flex-col justify-center items-center max-w-[95vw] mx-auto h-full ${isActive ? 'slide-active' : 'slide-exit pointer-events-none opacity-0'}`}>
+      {/* Subtle warm-tint overlay to differentiate from main slide */}
+      <div className="slide-overlay-hourly" />
       <div className="w-full flex flex-col justify-center items-center h-full max-h-[85vh]">
         <h2 className="text-4xl md:text-5xl lg:text-6xl font-headline-lg font-bold text-center text-primary mb-6 md:mb-8 tracking-tight">
           Hourly Forecast
