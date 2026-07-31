@@ -107,8 +107,8 @@ export function Background({ isDay, weatherCode, currentSlide = 1 }: Props) {
       <div className={`aurora-bg transition-opacity duration-1000 ${!isMainSlide ? 'opacity-20' : ''}`}></div>
       <div className={`starfield ${showStars ? 'starfield-visible' : ''}`}></div>
       <canvas ref={canvasRef} className={`absolute inset-0 pointer-events-none z-10 transition-opacity duration-1000 ${!isMainSlide ? 'opacity-30' : ''}`} />
-      {weatherCode >= 3 && (
-        <div className={`transition-opacity duration-1000 ${!isMainSlide ? 'opacity-30' : ''}`}>
+      {weatherCode >= 0 && (
+        <div className={`transition-opacity duration-1000 ${!isMainSlide ? 'opacity-30' : (weatherCode < 3 ? 'opacity-15' : 'opacity-100')}`}>
           <div className="cloud w-96 h-96 top-20 left-10" style={{ animationDuration: '120s' }}></div>
           <div className="cloud w-64 h-64 top-60 right-20" style={{ animationDuration: '80s', animationDelay: '-40s' }}></div>
           <div className="cloud w-80 h-80 top-1/2 left-1/3" style={{ animationDuration: '150s', animationDelay: '-20s', opacity: 0.6 }}></div>
