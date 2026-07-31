@@ -127,29 +127,37 @@ export default function App() {
     return () => clearInterval(refreshInterval);
   }, []);
 
-  // 2. Manage slide progression & progress bar
+  // 2. Manage slide progression & progress bar using wall-clock time for perfect global sync
   useEffect(() => {
     if (loading || error) return;
 
-    setProgressWidth(0);
+    let animationFrameId: number;
 
-    const timeout1 = setTimeout(() => {
-      setProgressWidth(100);
-    }, 50);
+    const updateSync = () => {
+      const now = Date.now();
+      const cycleTime = now % (SLIDE_DURATION * 3);
+      
+      let newSlide = 1;
+      if (cycleTime < SLIDE_DURATION) newSlide = 1;
+      else if (cycleTime < SLIDE_DURATION * 2) newSlide = 2;
+      else newSlide = 3;
 
-    const timeout2 = setTimeout(() => {
-      setCurrentSlide((prev) => {
-        if (prev === 1) return 2;
-        if (prev === 2) return 3;
-        return 1;
-      });
-    }, SLIDE_DURATION);
+      setCurrentSlide(newSlide);
+
+      // Calculate progress percentage for the current slide
+      const slideElapsed = cycleTime % SLIDE_DURATION;
+      const progress = (slideElapsed / SLIDE_DURATION) * 100;
+      setProgressWidth(progress);
+
+      animationFrameId = requestAnimationFrame(updateSync);
+    };
+
+    animationFrameId = requestAnimationFrame(updateSync);
 
     return () => {
-      clearTimeout(timeout1);
-      clearTimeout(timeout2);
+      cancelAnimationFrame(animationFrameId);
     };
-  }, [currentSlide, loading, error]);
+  }, [loading, error]);
 
   const currentHour = new Date().getHours();
   const isDayGuess = currentHour >= 6 && currentHour < 18;
@@ -219,8 +227,7 @@ export default function App() {
           <div 
             className="h-full bg-primary progress-bar-fill" 
             style={{ 
-              width: `${progressWidth}%`,
-              transitionDuration: progressWidth === 0 ? '0s' : `${SLIDE_DURATION}ms`
+              width: `${progressWidth}%`
             }} 
           />
         </div>
