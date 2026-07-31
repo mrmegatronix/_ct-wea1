@@ -3,9 +3,10 @@ import { useEffect, useRef } from 'react';
 interface Props {
   isDay: boolean;
   weatherCode: number;
+  currentSlide?: number;
 }
 
-export function Background({ isDay, weatherCode }: Props) {
+export function Background({ isDay, weatherCode, currentSlide = 1 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -99,17 +100,22 @@ export function Background({ isDay, weatherCode }: Props) {
   const hour = new Date().getHours();
   const showStars = !isDay && weatherCode < 3 && !(hour >= 6 && hour < 9) && !(hour >= 17 && hour < 20);
 
+  const isMainSlide = currentSlide === 1;
+
   return (
-    <div className={`bg-dynamic-weather ${bgClass}`}>
-      <div className="aurora-bg"></div>
+    <div className={`bg-dynamic-weather ${bgClass} transition-colors duration-1000`}>
+      <div className={`aurora-bg transition-opacity duration-1000 ${!isMainSlide ? 'opacity-20' : ''}`}></div>
       <div className={`starfield ${showStars ? 'starfield-visible' : ''}`}></div>
-      <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none z-10" />
+      <canvas ref={canvasRef} className={`absolute inset-0 pointer-events-none z-10 transition-opacity duration-1000 ${!isMainSlide ? 'opacity-30' : ''}`} />
       {weatherCode >= 3 && (
-        <>
+        <div className={`transition-opacity duration-1000 ${!isMainSlide ? 'opacity-30' : ''}`}>
           <div className="cloud w-96 h-96 top-20 left-10" style={{ animationDuration: '120s' }}></div>
           <div className="cloud w-64 h-64 top-60 right-20" style={{ animationDuration: '80s', animationDelay: '-40s' }}></div>
           <div className="cloud w-80 h-80 top-1/2 left-1/3" style={{ animationDuration: '150s', animationDelay: '-20s', opacity: 0.6 }}></div>
-        </>
+        </div>
+      )}
+      {!isMainSlide && (
+        <div className="absolute inset-0 bg-black/40 transition-opacity duration-1000 z-20 pointer-events-none"></div>
       )}
     </div>
   );

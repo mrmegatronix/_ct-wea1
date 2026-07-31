@@ -167,7 +167,8 @@ export default function App() {
     <div className="bg-background text-on-surface font-body-md overflow-hidden w-screen h-screen flex flex-col relative text-white">
       <Background 
         isDay={weather ? weather.current.isDay : isDayGuess} 
-        weatherCode={weather ? weather.current.weatherCode : weatherCodeGuess} 
+        weatherCode={weather ? weather.current.weatherCode : weatherCodeGuess}
+        currentSlide={currentSlide}
       />
       <Header />
       
