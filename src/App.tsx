@@ -83,7 +83,8 @@ export default function App() {
 
         const now = new Date();
         const currentHourISO = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}T${String(now.getHours()).padStart(2, '0')}:00`;
-        let startIndex = data.hourly.time.findIndex((t: string) => t >= currentHourISO);
+        const lookupTime = (data.current && data.current.time) ? data.current.time : currentHourISO;
+        let startIndex = data.hourly.time.findIndex((t: string) => t >= lookupTime);
         if (startIndex === -1) {
           startIndex = 0;
         }
