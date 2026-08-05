@@ -18,7 +18,7 @@ export function ForecastSlide({ isActive, forecasts }: Props) {
   return (
     <div className={`absolute inset-0 px-4 md:px-8 pb-16 slide-transition flex flex-col justify-center items-center max-w-[95vw] mx-auto h-full ${isActive ? 'slide-active' : 'slide-exit pointer-events-none opacity-0'}`}>
       <div className="w-full flex flex-col justify-center items-center h-full max-h-[85vh]">
-        <h2 className="text-4xl md:text-5xl lg:text-6xl font-headline-lg font-bold text-center text-primary mb-6 md:mb-8 tracking-tight">
+        <h2 className="text-4xl md:text-5xl lg:text-6xl font-headline-lg font-bold text-center text-[#6ee7b7] mb-6 md:mb-8 tracking-tight drop-shadow-[0_0_25px_rgba(110,231,183,0.35)]">
           7-Day Forecast
         </h2>
         <div className="flex gap-3 md:gap-4 w-full items-stretch justify-center pb-4 select-none">
@@ -27,10 +27,10 @@ export function ForecastSlide({ isActive, forecasts }: Props) {
             return (
               <div 
                 key={f.day} 
-                className={`flex-1 min-w-0 md:min-w-[90px] lg:min-w-[110px] xl:min-w-[130px] glass-panel rounded-[1.5rem] md:rounded-[2.5rem] p-4 md:p-6 lg:p-8 flex flex-col items-center justify-between border border-white/10 transition-all duration-300 hover:scale-[1.03] hover:border-primary/45 ${isToday ? 'bg-primary/10 border-primary/30 shadow-lg shadow-primary/5' : ''}`}
+                className={`flex-1 min-w-0 md:min-w-[90px] lg:min-w-[110px] xl:min-w-[130px] glass-panel rounded-[1.5rem] md:rounded-[2.5rem] p-4 md:p-6 lg:p-8 flex flex-col items-center justify-between border border-white/10 transition-all duration-300 hover:scale-[1.03] hover:border-[#34d399]/50 ${isToday ? 'bg-[#059669]/25 border-[#34d399]/60 shadow-lg shadow-[#059669]/30' : ''}`}
                 style={{ minHeight: '260px', mdMinHeight: '320px' } as any}
               >
-                <span className={`text-md md:text-lg lg:text-xl xl:text-2xl font-bold uppercase tracking-wider ${isToday ? 'text-primary' : 'text-on-surface/80'}`}>
+                <span className={`text-md md:text-lg lg:text-xl xl:text-2xl font-bold uppercase tracking-wider ${isToday ? 'text-[#a7f3d0]' : 'text-on-surface/80'}`}>
                   {f.day}
                 </span>
                 

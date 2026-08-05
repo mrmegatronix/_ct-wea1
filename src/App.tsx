@@ -48,7 +48,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  const SLIDE_DURATION = 15000; // 15 seconds per slide
+  const SLIDE_DURATION = 30000; // 30 seconds per slide
 
   // 1. Fetch live Christchurch weather
   useEffect(() => {
@@ -167,7 +167,7 @@ export default function App() {
   const weatherCodeGuess = 0;
 
   return (
-    <div className="bg-background text-on-surface font-body-md overflow-hidden w-screen h-screen flex flex-col relative text-white">
+    <div className="bg-[#030408] text-on-surface font-body-md overflow-hidden w-screen h-screen flex flex-col relative text-white select-none">
       <Background 
         isDay={weather ? weather.current.isDay : isDayGuess} 
         weatherCode={weather ? weather.current.weatherCode : weatherCodeGuess}
