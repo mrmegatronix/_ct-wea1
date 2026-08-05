@@ -19,14 +19,18 @@ export function Header() {
   const displayDate = `${days[time.getDay()]}, ${months[time.getMonth()]} ${time.getDate()}`;
 
   return (
-    <header className="w-full px-8 md:px-16 py-6 md:py-8 flex flex-col md:flex-row justify-between items-center z-50 gap-4 md:gap-0">
+    <header className="w-full px-8 md:px-16 py-6 md:py-8 flex flex-col md:flex-row justify-between items-center z-50 gap-4 md:gap-0 animate-header-enter">
       <div className="flex flex-col items-center md:items-start">
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-headline-lg font-bold text-on-surface flex items-center gap-3 text-center md:text-left">
-          <MapPin className="text-primary w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 stroke-2" />
+        <h1 className="text-3xl md:text-4xl lg:text-5xl font-headline-lg font-bold text-on-surface flex items-center gap-3 text-center md:text-left drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
+          <MapPin className="text-primary w-8 h-8 md:w-10 md:h-10 lg:w-12 lg:h-12 stroke-2 animate-bounce" style={{ animationDuration: '3s' }} />
           Christchurch, New Zealand
         </h1>
-        <span className="text-xs md:text-sm text-on-surface/50 mt-1 flex items-center gap-2">
-          <RefreshCcw className="w-3.5 h-3.5" /> Last Synced: Just now
+        <span className="text-xs md:text-sm text-on-surface/60 mt-1 flex items-center gap-2 font-medium">
+          <span className="relative flex h-2 w-2 mr-0.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          <RefreshCcw className="w-3.5 h-3.5 opacity-70" /> Live Feed Synced
         </span>
       </div>
       <div className="text-center md:text-right">

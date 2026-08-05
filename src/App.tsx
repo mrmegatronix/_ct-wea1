@@ -168,7 +168,7 @@ export default function App() {
   const weatherCodeGuess = 0;
 
   return (
-    <div className="bg-[#030408] text-on-surface font-body-md overflow-hidden w-screen h-screen flex flex-col relative text-white select-none">
+    <div className="bg-[#030408] text-on-surface font-body-md overflow-hidden w-screen h-screen flex flex-col relative text-white select-none animate-page-enter">
       <Background 
         isDay={weather ? weather.current.isDay : isDayGuess} 
         weatherCode={weather ? weather.current.weatherCode : weatherCodeGuess}
@@ -228,14 +228,16 @@ export default function App() {
       </main>
 
       {!loading && !error && (
-        <div id="progress-bar-container" className="fixed bottom-0 left-0 w-full bg-surface-container-highest z-50 progress-container timer-bar" style={{ height: '15px' }}>
+        <div id="progress-bar-container" className="fixed bottom-0 left-0 w-full bg-surface-container-highest/60 backdrop-blur-sm z-50 progress-container timer-bar shadow-[0_-2px_10px_rgba(0,0,0,0.5)]" style={{ height: '15px' }}>
           <div 
             id="progress-bar"
-            className="h-full bg-primary progress-bar-fill" 
+            className="h-full bg-gradient-to-r from-primary/80 to-primary progress-bar-fill relative shadow-[0_0_12px_rgba(158,202,255,0.8)]" 
             style={{ 
               width: `${progressWidth}%`
             }} 
-          />
+          >
+            <div className="absolute right-0 top-0 bottom-0 w-3 bg-white blur-[2px] opacity-80" />
+          </div>
         </div>
       )}
     </div>
