@@ -23,6 +23,7 @@ interface HourlyForecast {
   temp: number;
   weatherCode: number;
   rainProb: number;
+  isDay: boolean;
 }
 
 interface DailyForecast {
@@ -40,6 +41,7 @@ interface WeatherState {
 }
 
 export default function App() {
+  const isEmbedded = typeof window !== 'undefined' && window.self !== window.top;
   const [currentSlide, setCurrentSlide] = useState(1);
   const [progressWidth, setProgressWidth] = useState(0);
   const [weather, setWeather] = useState<WeatherState | null>(null);
@@ -57,7 +59,7 @@ export default function App() {
           longitude: '172.6362',
           current: 'temperature_2m,relative_humidity_2m,is_day,precipitation,weather_code,wind_speed_10m,wind_direction_10m,visibility',
           daily: 'temperature_2m_max,temperature_2m_min,weather_code,uv_index_max,precipitation_probability_max',
-          hourly: 'temperature_2m,weather_code,precipitation_probability',
+          hourly: 'temperature_2m,weather_code,precipitation_probability,is_day',
           timezone: 'Pacific/Auckland',
           forecast_days: '7'
         });
@@ -94,7 +96,8 @@ export default function App() {
             time: displayTime,
             temp: data.hourly.temperature_2m[i],
             weatherCode: data.hourly.weather_code[i],
-            rainProb: data.hourly.precipitation_probability ? data.hourly.precipitation_probability[i] : 0
+            rainProb: data.hourly.precipitation_probability ? data.hourly.precipitation_probability[i] : 0,
+            isDay: data.hourly.is_day ? data.hourly.is_day[i] === 1 : (date.getHours() >= 7 && date.getHours() < 18)
           });
         }
 
@@ -224,8 +227,9 @@ export default function App() {
       </main>
 
       {!loading && !error && (
-        <div className="fixed bottom-0 left-0 w-full h-2 bg-surface-container-highest z-50">
+        <div id="progress-bar-container" className="fixed bottom-0 left-0 w-full bg-surface-container-highest z-50 progress-container timer-bar" style={{ height: '15px' }}>
           <div 
+            id="progress-bar"
             className="h-full bg-primary progress-bar-fill" 
             style={{ 
               width: `${progressWidth}%`

@@ -95,8 +95,33 @@ export function AnimatedWeatherIcon({ code, isDay = true, className = "w-16 h-16
     );
   }
 
-  // 4. Partly Cloudy (Night) / Cloudy / Overcast / Fog
-  const isCloudy = code === 3 || code === 45 || code === 48 || (code <= 2 && !isDay);
+  // 3b. Partly Cloudy (Night)
+  if ((code === 1 || code === 2) && !isDay) {
+    return (
+      <svg viewBox="0 0 64 64" className={`${className} icon-float`} style={style} overflow="visible">
+        <Gradients />
+        {/* Moon behind cloud */}
+        <g transform="translate(-4, -6) scale(0.75)">
+          <path 
+            d="M42 12 A 20 20 0 1 0 42 52 A 15 15 0 1 1 42 12" 
+            fill="url(#moon-glow)" 
+            filter="drop-shadow(0 0 4px rgba(236, 239, 241, 0.3))"
+          />
+          <circle cx="16" cy="18" r="1.5" fill="#fff" className="blink" style={{ animationDelay: '0s' }} />
+        </g>
+        {/* Cloud in front */}
+        <path 
+          className="icon-drift-left-right"
+          d="M46 48H18C11.4 48 6 42.6 6 36c0-6.2 4.6-11.3 10.6-11.9C17.8 15.6 25 9 33.5 9c9.3 0 17 6.8 18.5 15.8 5.6 1.1 10 5.9 10 11.7 0 6.3-5.2 11.5-11.5 11.5z" 
+          fill="url(#cloud-silver)"
+          filter="drop-shadow(0 4px 6px rgba(0,0,0,0.15))"
+        />
+      </svg>
+    );
+  }
+
+  // 4. Cloudy / Overcast / Fog
+  const isCloudy = code === 3 || code === 45 || code === 48;
   if (isCloudy) {
     return (
       <svg viewBox="0 0 64 64" className={`${className} icon-float`} style={style} overflow="visible">

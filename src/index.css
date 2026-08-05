@@ -36,47 +36,73 @@
                     0 15px 35px -5px rgba(0, 0, 0, 0.5);
     }
 
-    /* Dynamic Gradients */
+    /* Dynamic Gradients - Slide 1 (Current Conditions) */
     .bg-weather-night {
-        background: linear-gradient(180deg, #090e18 0%, #030408 100%);
+        background: radial-gradient(circle at 50% 20%, #151c2e 0%, #090e18 50%, #030408 100%);
     }
     .bg-weather-sunrise {
-        background: linear-gradient(180deg, #f2709c 0%, #ff9472 50%, #1A2A3A 100%);
+        background: radial-gradient(circle at 50% 40%, #ff9472 0%, #f2709c 40%, #1A2A3A 100%);
     }
     .bg-weather-sunset {
-        background: linear-gradient(180deg, #e65c00 0%, #F9D423 50%, #111316 100%);
+        background: radial-gradient(circle at 50% 40%, #F9D423 0%, #e65c00 45%, #111316 100%);
     }
     .bg-weather-day-clear {
-        background: linear-gradient(180deg, #1e88e5 0%, #1565c0 60%, #111316 100%);
+        background: radial-gradient(circle at 50% 15%, #29b6f6 0%, #1565c0 50%, #0d1b2a 100%);
     }
     .bg-weather-cloudy {
-        background: linear-gradient(180deg, #37474f 0%, #263238 60%, #111316 100%);
+        background: radial-gradient(circle at 50% 20%, #455a64 0%, #263238 55%, #111316 100%);
     }
     .bg-weather-rainy {
-        background: linear-gradient(180deg, #1f2937 0%, #111827 60%, #0d0f12 100%);
+        background: radial-gradient(circle at 50% 20%, #2c3e50 0%, #111827 55%, #080b10 100%);
     }
     .bg-weather-stormy {
-        background: linear-gradient(180deg, #111827 0%, #030712 100%);
+        background: radial-gradient(circle at 50% 20%, #1f2430 0%, #0b0f19 55%, #020305 100%);
     }
 
-    /* Per-slide overlay tints for visual differentiation */
-    .slide-overlay-hourly {
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        z-index: 0;
-        background: linear-gradient(135deg, rgba(30, 58, 95, 0.25) 0%, rgba(15, 25, 50, 0.15) 50%, rgba(80, 40, 120, 0.12) 100%);
-        border-radius: inherit;
-        transition: opacity 1.2s ease-in-out;
+    /* Dynamic Gradients - Slide 2 (Hourly Forecast: Atmospheric Indigo/Teal/Cobalt) */
+    .bg-hourly-night {
+        background: linear-gradient(145deg, #090e24 0%, #131b3e 45%, #050713 100%);
     }
-    .slide-overlay-forecast {
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        z-index: 0;
-        background: linear-gradient(225deg, rgba(20, 60, 60, 0.22) 0%, rgba(10, 30, 45, 0.18) 50%, rgba(40, 20, 70, 0.14) 100%);
-        border-radius: inherit;
-        transition: opacity 1.2s ease-in-out;
+    .bg-hourly-sunrise {
+        background: linear-gradient(145deg, #a83279 0%, #d38312 45%, #10162a 100%);
+    }
+    .bg-hourly-sunset {
+        background: linear-gradient(145deg, #c0392b 0%, #8e44ad 45%, #0c1020 100%);
+    }
+    .bg-hourly-day-clear {
+        background: linear-gradient(145deg, #0a3d62 0%, #1e6091 45%, #0c1b2f 100%);
+    }
+    .bg-hourly-cloudy {
+        background: linear-gradient(145deg, #243342 0%, #34495e 45%, #111922 100%);
+    }
+    .bg-hourly-rainy {
+        background: linear-gradient(145deg, #132738 0%, #1f3d59 45%, #09131c 100%);
+    }
+    .bg-hourly-stormy {
+        background: linear-gradient(145deg, #0f1624 0%, #192338 45%, #03060d 100%);
+    }
+
+    /* Dynamic Gradients - Slide 3 (7-Day Forecast: Deep Emerald/Cyan/Cosmic Amethyst) */
+    .bg-forecast-night {
+        background: linear-gradient(225deg, #180d2e 0%, #2c164d 45%, #070311 100%);
+    }
+    .bg-forecast-sunrise {
+        background: linear-gradient(225deg, #7028e4 0%, #e5b2ca 45%, #130a24 100%);
+    }
+    .bg-forecast-sunset {
+        background: linear-gradient(225deg, #833ab4 0%, #fd1d1d 45%, #150a18 100%);
+    }
+    .bg-forecast-day-clear {
+        background: linear-gradient(225deg, #06444a 0%, #0e747a 45%, #041f23 100%);
+    }
+    .bg-forecast-cloudy {
+        background: linear-gradient(225deg, #1e333a 0%, #2d4c55 45%, #0f191d 100%);
+    }
+    .bg-forecast-rainy {
+        background: linear-gradient(225deg, #0f2b30 0%, #1b434b 45%, #071619 100%);
+    }
+    .bg-forecast-stormy {
+        background: linear-gradient(225deg, #0e1a22 0%, #182833 45%, #04090c 100%);
     }
 
     .bg-dynamic-weather {
@@ -84,7 +110,6 @@
         top: 0; left: 0; width: 100%; height: 100%;
         z-index: -1;
         overflow: hidden;
-        transition: background 2s ease-in-out;
     }
     
     .aurora-bg {

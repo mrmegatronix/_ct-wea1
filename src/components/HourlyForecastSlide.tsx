@@ -6,6 +6,7 @@ interface HourlyForecast {
   temp: number;
   weatherCode: number;
   rainProb: number;
+  isDay?: boolean;
 }
 
 interface Props {
@@ -16,8 +17,6 @@ interface Props {
 export function HourlyForecastSlide({ isActive, hourly }: Props) {
   return (
     <div className={`absolute inset-0 px-4 md:px-8 pb-16 slide-transition flex flex-col justify-center items-center max-w-[95vw] mx-auto h-full ${isActive ? 'slide-active' : 'slide-exit pointer-events-none opacity-0'}`}>
-      {/* Subtle warm-tint overlay to differentiate from main slide */}
-      <div className="slide-overlay-hourly" />
       <div className="w-full flex flex-col justify-center items-center h-full max-h-[85vh]">
         <h2 className="text-4xl md:text-5xl lg:text-6xl font-headline-lg font-bold text-center text-primary mb-6 md:mb-8 tracking-tight">
           Hourly Forecast
@@ -38,7 +37,7 @@ export function HourlyForecastSlide({ isActive, hourly }: Props) {
                 <div className="my-3 md:my-4 lg:my-6 flex items-center justify-center">
                   <AnimatedWeatherIcon 
                     code={h.weatherCode} 
-                    isDay={true} 
+                    isDay={h.isDay !== undefined ? h.isDay : true} 
                     className="w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20" 
                     style={{ 
                       animationDelay: `${i * 0.3}s`,
