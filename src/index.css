@@ -38,20 +38,59 @@
         overflow: hidden;
     }
 
+    /* Autonomous TV Sheen Sweep (periodic cinematic ray) */
     .glass-panel::after {
         content: '';
         position: absolute;
         top: 0; left: -150%;
-        width: 100%; height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.04), transparent);
-        transform: skewX(-20deg);
+        width: 60%; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+        transform: skewX(-25deg);
         pointer-events: none;
-        transition: left 0.8s ease;
+        animation: sheen-sweep 8s ease-in-out infinite;
     }
 
-    .glass-panel:hover::after {
-        left: 150%;
+    .sheen-delay-1::after { animation-delay: 0.6s; }
+    .sheen-delay-2::after { animation-delay: 1.4s; }
+    .sheen-delay-3::after { animation-delay: 2.2s; }
+    .sheen-delay-4::after { animation-delay: 3.0s; }
+    .sheen-delay-5::after { animation-delay: 3.8s; }
+    .sheen-delay-6::after { animation-delay: 4.6s; }
+    .sheen-delay-7::after { animation-delay: 5.4s; }
+    .sheen-delay-8::after { animation-delay: 6.2s; }
+
+    /* TV Autonomous Card Float / Organic Ambient Breathing */
+    .tv-float-1 { animation: tv-float 6s ease-in-out infinite; }
+    .tv-float-2 { animation: tv-float 6s ease-in-out 0.75s infinite; }
+    .tv-float-3 { animation: tv-float 6s ease-in-out 1.5s infinite; }
+    .tv-float-4 { animation: tv-float 6s ease-in-out 2.25s infinite; }
+    .tv-float-5 { animation: tv-float 6s ease-in-out 3.0s infinite; }
+    .tv-float-6 { animation: tv-float 6s ease-in-out 3.75s infinite; }
+    .tv-float-7 { animation: tv-float 6s ease-in-out 4.5s infinite; }
+    .tv-float-8 { animation: tv-float 6s ease-in-out 5.25s infinite; }
+
+    /* Active Highlight Card Neon Glow Pulse (Now & Today) */
+    .glow-pulse-indigo {
+        animation: active-glow-breathe 3.5s ease-in-out infinite alternate;
     }
+    .glow-pulse-emerald {
+        animation: active-green-glow-breathe 3.5s ease-in-out infinite alternate;
+    }
+
+    /* Condition Title Shimmer */
+    .text-shimmer {
+        background: linear-gradient(90deg, #ffffff 0%, #cbd5e1 30%, #ffffff 50%, #94a3b8 70%, #ffffff 100%);
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: text-shine 8s linear infinite;
+    }
+
+    /* Micro Icon Motion on Metric Cards */
+    .droplet-pulse { animation: droplet-breathe 2.5s ease-in-out infinite; }
+    .sun-ray-pulse { animation: sun-pulse 4s ease-in-out infinite; }
+    .eye-vis-pulse { animation: eye-pulse 5s ease-in-out infinite; }
+    .moon-phase-pulse { animation: moon-glow-breathe 4s ease-in-out infinite; }
 
     /* Page Entrance */
     .animate-page-enter {
@@ -177,9 +216,10 @@
 
     /* Slide Open / Close & Content Load Transitions */
     .slide-transition {
-        transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), 
-                    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
-                    filter 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                    filter 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                    visibility 0.8s;
         will-change: opacity, transform, filter;
     }
 
@@ -188,6 +228,8 @@
         transform: scale(1) translateY(0);
         filter: blur(0px);
         pointer-events: auto;
+        visibility: visible;
+        z-index: 20;
     }
 
     .slide-exit {
@@ -195,6 +237,8 @@
         transform: scale(0.96) translateY(24px);
         filter: blur(8px);
         pointer-events: none;
+        visibility: hidden;
+        z-index: 10;
     }
 
     /* Staggered Card Entrance Delays */
@@ -360,6 +404,62 @@
 
 @keyframes ping {
     75%, 100% { transform: scale(2); opacity: 0; }
+}
+
+@keyframes sheen-sweep {
+    0% { left: -150%; }
+    20%, 100% { left: 200%; }
+}
+
+@keyframes tv-float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-7px); }
+}
+
+@keyframes active-glow-breathe {
+    0% {
+        box-shadow: 0 0 15px rgba(129, 140, 248, 0.25), inset 0 0 12px rgba(129, 140, 248, 0.2);
+        border-color: rgba(129, 140, 248, 0.5);
+    }
+    100% {
+        box-shadow: 0 0 35px rgba(129, 140, 248, 0.6), inset 0 0 20px rgba(129, 140, 248, 0.4);
+        border-color: rgba(165, 180, 252, 0.9);
+    }
+}
+
+@keyframes active-green-glow-breathe {
+    0% {
+        box-shadow: 0 0 15px rgba(52, 211, 153, 0.25), inset 0 0 12px rgba(52, 211, 153, 0.2);
+        border-color: rgba(52, 211, 153, 0.5);
+    }
+    100% {
+        box-shadow: 0 0 35px rgba(52, 211, 153, 0.6), inset 0 0 20px rgba(52, 211, 153, 0.4);
+        border-color: rgba(110, 231, 183, 0.9);
+    }
+}
+
+@keyframes text-shine {
+    to { background-position: 200% center; }
+}
+
+@keyframes droplet-breathe {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(56, 189, 248, 0.4)); }
+    50% { transform: scale(1.15); filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.8)); }
+}
+
+@keyframes sun-pulse {
+    0%, 100% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 3px rgba(251, 146, 60, 0.4)); }
+    50% { transform: scale(1.12) rotate(15deg); filter: drop-shadow(0 0 10px rgba(251, 146, 60, 0.8)); }
+}
+
+@keyframes eye-pulse {
+    0%, 100% { opacity: 0.8; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.08); filter: drop-shadow(0 0 6px rgba(147, 197, 253, 0.6)); }
+}
+
+@keyframes moon-glow-breathe {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(224, 231, 255, 0.4)); }
+    50% { transform: scale(1.1); filter: drop-shadow(0 0 8px rgba(224, 231, 255, 0.9)); }
 }
 
 @media (prefers-reduced-motion: reduce) {

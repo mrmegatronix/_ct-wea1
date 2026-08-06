@@ -28,7 +28,7 @@ export function ForecastSlide({ isActive, forecasts }: Props) {
             return (
               <div 
                 key={f.day} 
-                className={`flex-1 min-w-0 md:min-w-[90px] lg:min-w-[110px] xl:min-w-[130px] glass-panel rounded-[1.5rem] md:rounded-[2.5rem] p-4 md:p-6 lg:p-8 flex flex-col items-center justify-between border border-white/10 transition-all duration-300 hover:scale-[1.05] hover:border-[#34d399]/60 card-stagger-${staggerIndex} ${isToday ? 'bg-[#059669]/25 border-[#34d399]/70 shadow-xl shadow-[#059669]/35 ring-1 ring-[#34d399]/40' : ''}`}
+                className={`flex-1 min-w-0 md:min-w-[90px] lg:min-w-[110px] xl:min-w-[130px] glass-panel rounded-[1.5rem] md:rounded-[2.5rem] p-4 md:p-6 lg:p-8 flex flex-col items-center justify-between border border-white/10 transition-all duration-300 card-stagger-${staggerIndex} tv-float-${staggerIndex} sheen-delay-${staggerIndex} ${isToday ? 'bg-[#059669]/25 border-[#34d399]/70 shadow-xl shadow-[#059669]/35 ring-1 ring-[#34d399]/40 glow-pulse-emerald' : ''}`}
                 style={{ minHeight: '260px', mdMinHeight: '320px' } as any}
               >
                 <span className={`text-md md:text-lg lg:text-xl xl:text-2xl font-bold uppercase tracking-wider ${isToday ? 'text-[#a7f3d0] drop-shadow-[0_0_10px_rgba(167,243,208,0.5)]' : 'text-on-surface/80'}`}>

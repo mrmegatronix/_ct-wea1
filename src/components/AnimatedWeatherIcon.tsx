@@ -56,13 +56,13 @@ export function AnimatedWeatherIcon({ code, isDay = true, className = "w-16 h-16
       <svg viewBox="0 0 64 64" className={`${className} icon-float`} style={style} overflow="visible">
         <Gradients />
         <path 
-          d="M42 12 A 20 20 0 1 0 42 52 A 15 15 0 1 1 42 12" 
+          d="M38 12 C24.7 12 14 22.7 14 36 c0 13.3 10.7 24 24 24 4.8 0 9.3-1.4 13.1-3.9 -10.2-2.8-17.7-12.1-17.7-23.2 0-11.1 7.5-20.4 17.7-23.2 C47.3 13.4 42.8 12 38 12 Z" 
           fill="url(#moon-glow)" 
-          filter="drop-shadow(0 0 4px rgba(236, 239, 241, 0.3))"
+          filter="drop-shadow(0 0 10px rgba(236, 239, 241, 0.4))"
         />
         {/* Tiny pulsing stars */}
-        <circle cx="16" cy="18" r="1" fill="#fff" className="blink" style={{ animationDelay: '0s' }} />
-        <circle cx="48" cy="22" r="1.5" fill="#fff" className="blink" style={{ animationDelay: '1s' }} />
+        <circle cx="16" cy="18" r="1.5" fill="#fff" className="blink" style={{ animationDelay: '0s' }} />
+        <circle cx="48" cy="22" r="2" fill="#fff" className="blink" style={{ animationDelay: '1s' }} />
       </svg>
     );
   }
@@ -101,11 +101,11 @@ export function AnimatedWeatherIcon({ code, isDay = true, className = "w-16 h-16
       <svg viewBox="0 0 64 64" className={`${className} icon-float`} style={style} overflow="visible">
         <Gradients />
         {/* Moon behind cloud */}
-        <g transform="translate(-4, -6) scale(0.75)">
+        <g transform="translate(-6, -6) scale(0.75)">
           <path 
-            d="M42 12 A 20 20 0 1 0 42 52 A 15 15 0 1 1 42 12" 
+            d="M38 12 C24.7 12 14 22.7 14 36 c0 13.3 10.7 24 24 24 4.8 0 9.3-1.4 13.1-3.9 -10.2-2.8-17.7-12.1-17.7-23.2 0-11.1 7.5-20.4 17.7-23.2 C47.3 13.4 42.8 12 38 12 Z" 
             fill="url(#moon-glow)" 
-            filter="drop-shadow(0 0 4px rgba(236, 239, 241, 0.3))"
+            filter="drop-shadow(0 0 8px rgba(236, 239, 241, 0.4))"
           />
           <circle cx="16" cy="18" r="1.5" fill="#fff" className="blink" style={{ animationDelay: '0s' }} />
         </g>

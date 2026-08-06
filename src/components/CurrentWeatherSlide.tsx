@@ -53,10 +53,10 @@ export function CurrentWeatherSlide({ isActive, current, todayHigh, todayLow, to
         </div>
 
         <div className="flex flex-wrap justify-center gap-3 md:gap-4 w-full max-w-full">
-          <MetricCard staggerClass="card-stagger-1" icon={<Droplets className="text-secondary-fixed w-8 h-8 md:w-10 md:h-10 mb-2" />} label="Humidity" value={`${current.humidity}%`} />
-          <MetricCard staggerClass="card-stagger-2" icon={<Sun className="text-sunset-orange w-8 h-8 md:w-10 md:h-10 mb-2" />} label="UV Index" value={getUVDescriptor(current.uvIndex)} />
+          <MetricCard staggerClass="card-stagger-1 tv-float-1 sheen-delay-1" icon={<Droplets className="text-secondary-fixed w-8 h-8 md:w-10 md:h-10 mb-2 droplet-pulse" />} label="Humidity" value={`${current.humidity}%`} />
+          <MetricCard staggerClass="card-stagger-2 tv-float-2 sheen-delay-2" icon={<Sun className="text-sunset-orange w-8 h-8 md:w-10 md:h-10 mb-2 sun-ray-pulse" />} label="UV Index" value={getUVDescriptor(current.uvIndex)} />
           <MetricCard 
-            staggerClass="card-stagger-3"
+            staggerClass="card-stagger-3 tv-float-3 sheen-delay-3"
             icon={
               <div className="relative mb-2 flex items-center justify-center">
                 <Navigation 
@@ -68,9 +68,9 @@ export function CurrentWeatherSlide({ isActive, current, todayHigh, todayLow, to
             label="Wind" 
             value={`${current.windSpeed.toFixed(1)} km/h ${getWindCompassDirection(current.windDirection)}`} 
           />
-          <MetricCard staggerClass="card-stagger-4" icon={<Eye className="text-primary-fixed-dim w-8 h-8 md:w-10 md:h-10 mb-2" />} label="Vis" value={`${current.visibility.toFixed(1)} km`} />
-          <MetricCard staggerClass="card-stagger-5" icon={<Droplets className="text-clear-blue w-8 h-8 md:w-10 md:h-10 mb-2" />} label="Precip" value={`${current.precipitation.toFixed(1)} mm`} />
-          <MetricCard staggerClass="card-stagger-6" icon={<Moon className="text-surface-tint w-8 h-8 md:w-10 md:h-10 mb-2" />} label="Moon" value={getMoonPhase()} />
+          <MetricCard staggerClass="card-stagger-4 tv-float-4 sheen-delay-4" icon={<Eye className="text-primary-fixed-dim w-8 h-8 md:w-10 md:h-10 mb-2 eye-vis-pulse" />} label="Vis" value={`${current.visibility.toFixed(1)} km`} />
+          <MetricCard staggerClass="card-stagger-5 tv-float-5 sheen-delay-5" icon={<Droplets className="text-clear-blue w-8 h-8 md:w-10 md:h-10 mb-2 droplet-pulse" />} label="Precip" value={`${current.precipitation.toFixed(1)} mm`} />
+          <MetricCard staggerClass="card-stagger-6 tv-float-6 sheen-delay-6" icon={<Moon className="text-surface-tint w-8 h-8 md:w-10 md:h-10 mb-2 moon-phase-pulse" />} label="Moon" value={getMoonPhase()} />
         </div>
       </div>
     </div>

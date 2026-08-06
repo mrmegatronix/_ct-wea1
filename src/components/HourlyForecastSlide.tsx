@@ -28,7 +28,7 @@ export function HourlyForecastSlide({ isActive, hourly }: Props) {
             return (
               <div 
                 key={h.time + i} 
-                className={`flex-1 min-w-0 md:min-w-[90px] lg:min-w-[110px] xl:min-w-[130px] glass-panel rounded-[1.5rem] md:rounded-[2.5rem] p-4 md:p-6 lg:p-8 flex flex-col items-center justify-between border border-white/10 transition-all duration-300 hover:scale-[1.05] hover:border-[#818cf8]/60 card-stagger-${staggerIndex} ${isNow ? 'bg-[#4338ca]/25 border-[#818cf8]/70 shadow-xl shadow-[#4338ca]/35 ring-1 ring-[#818cf8]/40' : ''}`}
+                className={`flex-1 min-w-0 md:min-w-[90px] lg:min-w-[110px] xl:min-w-[130px] glass-panel rounded-[1.5rem] md:rounded-[2.5rem] p-4 md:p-6 lg:p-8 flex flex-col items-center justify-between border border-white/10 transition-all duration-300 card-stagger-${staggerIndex} tv-float-${staggerIndex} sheen-delay-${staggerIndex} ${isNow ? 'bg-[#4338ca]/25 border-[#818cf8]/70 shadow-xl shadow-[#4338ca]/35 ring-1 ring-[#818cf8]/40 glow-pulse-indigo' : ''}`}
                 style={{ minHeight: '260px', mdMinHeight: '320px' } as any}
               >
                 <span className={`text-md md:text-lg lg:text-xl xl:text-2xl font-bold uppercase tracking-wider text-center ${isNow ? 'text-[#c7d2fe] drop-shadow-[0_0_10px_rgba(199,210,254,0.5)]' : 'text-on-surface/80'}`}>
