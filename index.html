@@ -1,13 +1,876 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Christchurch Weather App</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Christchurch Weather Display Engine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #030408;
+      --primary: #9ecaff;
+      --primary-dim: #70a0e0;
+      --accent-orange: #ff9800;
+      --accent-blue: #38bdf8;
+      --accent-gold: #f59e0b;
+      --text-main: #f8fafc;
+      --text-muted: rgba(248, 250, 252, 0.65);
+      --glass-bg: rgba(13, 20, 36, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --glass-glow: rgba(158, 202, 255, 0.15);
+    }
 
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Ambient Dynamic Background */
+    .bg-canvas {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      transition: background 1.5s ease;
+      background: radial-gradient(circle at 50% 30%, #0f172a 0%, #030408 100%);
+    }
+
+    .bg-particles {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .star {
+      position: absolute;
+      background: #ffffff;
+      border-radius: 50%;
+      opacity: 0.6;
+      animation: twinkle 3s infinite ease-in-out;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; transform: scale(0.8); }
+      50% { opacity: 0.9; transform: scale(1.3); }
+    }
+
+    /* Glass Panels */
+    .glass-panel {
+      background: var(--glass-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px var(--glass-glow);
+    }
+
+    /* Header */
+    header {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 3rem 0.5rem 3rem;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .loc-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 0.4rem 1rem;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #10b981;
+      animation: livePulse 2s infinite;
+    }
+
+    @keyframes livePulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    .header-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #ffffff 40%, var(--primary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header-right {
+      text-align: right;
+    }
+
+    .clock-time {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1;
+    }
+
+    .clock-date {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    /* Main Container & Slide System */
+    main {
+      flex: 1;
+      position: relative;
+      z-index: 10;
+      padding: 1rem 3rem 2.5rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 1rem 3rem 2.5rem 3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(15px) scale(0.98);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0) scale(1);
+    }
+
+    /* Slide 1: Current Hero */
+    .hero-card {
+      width: 100%;
+      max-width: 1100px;
+      border-radius: 2.5rem;
+      padding: 2.5rem 3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hero-center {
+      display: flex;
+      align-items: center;
+      gap: 3.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .temp-big {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(6rem, 14vw, 11rem);
+      font-weight: 800;
+      line-height: 0.9;
+      color: #ffffff;
+      text-shadow: 0 0 40px rgba(158, 202, 255, 0.4);
+    }
+
+    .cond-title {
+      font-size: clamp(2.2rem, 3.5vw, 3.2rem);
+      font-weight: 800;
+      margin-bottom: 0.4rem;
+      text-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+
+    .hl-range {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .rain-tag {
+      color: var(--accent-blue);
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 1rem;
+      width: 100%;
+      margin-top: 1.5rem;
+    }
+
+    .metric-box {
+      border-radius: 1.25rem;
+      padding: 1.2rem 0.8rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+
+    .metric-box:hover {
+      transform: translateY(-4px);
+      border-color: rgba(158, 202, 255, 0.4);
+    }
+
+    .metric-icon {
+      font-size: 1.8rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .metric-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .metric-val {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #ffffff;
+      white-space: nowrap;
+    }
+
+    /* Slide 2: Hourly Forecast */
+    .hourly-card {
+      width: 100%;
+      max-width: 1200px;
+      border-radius: 2.5rem;
+      padding: 2.5rem 3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .section-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 1.8rem;
+      text-align: center;
+    }
+
+    .hourly-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 1rem;
+      width: 100%;
+    }
+
+    .hourly-item {
+      border-radius: 1.5rem;
+      padding: 1.5rem 0.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .hourly-time {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.8rem;
+    }
+
+    .hourly-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .hourly-temp {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+
+    .hourly-rain {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent-blue);
+    }
+
+    /* Slide 3: 7-Day Forecast */
+    .weekly-card {
+      width: 100%;
+      max-width: 1200px;
+      border-radius: 2.5rem;
+      padding: 2.5rem 3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .weekly-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 1rem;
+      width: 100%;
+    }
+
+    .weekly-item {
+      border-radius: 1.5rem;
+      padding: 1.5rem 0.8rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .weekly-day {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+    }
+
+    .weekly-icon {
+      font-size: 2.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .weekly-high {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .weekly-low {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.6rem;
+    }
+
+    .weekly-rain {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent-blue);
+    }
+
+    /* Synced Bottom Progress Bar */
+    .progress-track {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      z-index: 100;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent-blue), var(--primary), var(--accent-gold));
+      box-shadow: 0 0 15px rgba(158, 202, 255, 0.8);
+      position: relative;
+    }
+
+    .progress-glow {
+      position: absolute;
+      right: 0;
+      top: -3px;
+      bottom: -3px;
+      width: 8px;
+      background: #ffffff;
+      filter: blur(2px);
+      border-radius: 4px;
+    }
+
+    /* Animated SVG Icons */
+    .weather-svg {
+      width: 120px;
+      height: 120px;
+      filter: drop-shadow(0 0 15px rgba(255, 200, 50, 0.3));
+    }
+
+    @keyframes spinSlow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .icon-spin {
+      transform-origin: center;
+      animation: spinSlow 20s linear infinite;
+    }
+
+    @keyframes floatUpDown {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .icon-float {
+      animation: floatUpDown 4s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body>
+  <!-- Ambient Dynamic Canvas -->
+  <div class="bg-canvas" id="bgCanvas"></div>
+  <div class="bg-particles" id="bgParticles"></div>
+
+  <!-- Top Header -->
+  <header>
+    <div class="header-left">
+      <div class="loc-badge">
+        <div class="pulse-dot"></div>
+        <span>Christchurch, NZ</span>
+      </div>
+      <div class="header-title">Atmospheric Display</div>
+    </div>
+    <div class="header-right">
+      <div class="clock-time" id="clockTime">--:--:--</div>
+      <div class="clock-date" id="clockDate">Loading calendar...</div>
+    </div>
+  </header>
+
+  <!-- Main Slides Container -->
+  <main>
+    <!-- Slide 1: Current Live Weather -->
+    <div class="slide active" id="slide1">
+      <div class="glass-panel hero-card">
+        <div class="hero-center">
+          <div id="heroIconContainer" class="icon-float">
+            <!-- Animated SVG Icon Injected Here -->
+          </div>
+          <div class="temp-big" id="currentTemp">18.5°</div>
+        </div>
+
+        <div style="text-align: center;">
+          <div class="cond-title" id="conditionText">Partly Cloudy</div>
+          <div class="hl-range">
+            <span id="highLowRange">H: 21.0° | L: 12.0°</span>
+            <span class="rain-tag">
+              💧 <span id="currentRainProb">10%</span> Rain
+            </span>
+          </div>
+        </div>
+
+        <!-- 6 Metrics Grid -->
+        <div class="metrics-grid">
+          <div class="glass-panel metric-box">
+            <div class="metric-icon">💧</div>
+            <div class="metric-label">Humidity</div>
+            <div class="metric-val" id="valHumidity">68%</div>
+          </div>
+          <div class="glass-panel metric-box">
+            <div class="metric-icon">☀️</div>
+            <div class="metric-label">UV Index</div>
+            <div class="metric-val" id="valUV">4.2 Mod</div>
+          </div>
+          <div class="glass-panel metric-box">
+            <div class="metric-icon" id="windIcon">🧭</div>
+            <div class="metric-label">Wind</div>
+            <div class="metric-val" id="valWind">18.5 km/h NE</div>
+          </div>
+          <div class="glass-panel metric-box">
+            <div class="metric-icon">👁️</div>
+            <div class="metric-label">Visibility</div>
+            <div class="metric-val" id="valVisibility">10.0 km</div>
+          </div>
+          <div class="glass-panel metric-box">
+            <div class="metric-icon">🌧️</div>
+            <div class="metric-label">Precipitation</div>
+            <div class="metric-val" id="valPrecip">0.0 mm</div>
+          </div>
+          <div class="glass-panel metric-box">
+            <div class="metric-icon">🌙</div>
+            <div class="metric-label">Moon Phase</div>
+            <div class="metric-val" id="valMoon">Waxing Gibb</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 2: 8-Hour Forecast -->
+    <div class="slide" id="slide2">
+      <div class="glass-panel hourly-card">
+        <div class="section-title">8-Hour Hourly Outlook</div>
+        <div class="hourly-grid" id="hourlyGrid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 3: 7-Day Extended Forecast -->
+    <div class="slide" id="slide3">
+      <div class="glass-panel weekly-card">
+        <div class="section-title">7-Day Extended Forecast</div>
+        <div class="weekly-grid" id="weeklyGrid">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Synchronized Bottom Progress Bar -->
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill">
+      <div class="progress-glow"></div>
+    </div>
+  </div>
+
+  <script>
+    // Safe, robust Christchurch Weather Engine
+    const SLIDE_DURATION = 30000; // 30s per slide (90s total loop)
+
+    // Weather condition map
+    const WEATHER_MAP = {
+      0: { label: 'Clear Sky', icon: '☀️', nightIcon: '🌙' },
+      1: { label: 'Mainly Clear', icon: '🌤️', nightIcon: '☁️' },
+      2: { label: 'Partly Cloudy', icon: '⛅', nightIcon: '☁️' },
+      3: { label: 'Overcast', icon: '☁️', nightIcon: '☁️' },
+      45: { label: 'Foggy', icon: '🌫️', nightIcon: '🌫️' },
+      48: { label: 'Depositing Fog', icon: '🌫️', nightIcon: '🌫️' },
+      51: { label: 'Light Drizzle', icon: '🌦️', nightIcon: '🌧️' },
+      53: { label: 'Moderate Drizzle', icon: '🌧️', nightIcon: '🌧️' },
+      55: { label: 'Dense Drizzle', icon: '🌧️', nightIcon: '🌧️' },
+      61: { label: 'Slight Rain', icon: '🌦️', nightIcon: '🌧️' },
+      63: { label: 'Moderate Rain', icon: '🌧️', nightIcon: '🌧️' },
+      65: { label: 'Heavy Rain', icon: '⛈️', nightIcon: '⛈️' },
+      71: { label: 'Slight Snow', icon: '🌨️', nightIcon: '🌨️' },
+      80: { label: 'Rain Showers', icon: '🌧️', nightIcon: '🌧️' },
+      81: { label: 'Heavy Showers', icon: '⛈️', nightIcon: '⛈️' },
+      95: { label: 'Thunderstorm', icon: '⚡', nightIcon: '⚡' }
+    };
+
+    function getWeatherInfo(code, isDay) {
+      const entry = WEATHER_MAP[code] || { label: 'Cloudy', icon: '⛅', nightIcon: '☁️' };
+      return {
+        label: entry.label,
+        icon: isDay ? entry.icon : entry.nightIcon
+      };
+    }
+
+    function getWindDir(deg) {
+      const dirs = ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'];
+      return dirs[Math.round(((deg % 360) / 22.5)) % 16];
+    }
+
+    function getUVText(uv) {
+      const val = Number(uv).toFixed(1);
+      if (uv <= 2) return `${val} Low`;
+      if (uv <= 5) return `${val} Mod`;
+      if (uv <= 7) return `${val} High`;
+      if (uv <= 10) return `${val} Very High`;
+      return `${val} Extreme`;
+    }
+
+    function getMoonPhase() {
+      const lp = 2551443;
+      const now = new Date();
+      const newMoon = new Date(1970, 0, 7, 20, 35, 0);
+      const phase = ((now.getTime() - newMoon.getTime()) / 1000) % lp;
+      const age = phase / (24 * 3600);
+      if (age < 1.8) return 'New Moon';
+      if (age < 5.5) return 'Waxing Crescent';
+      if (age < 9.2) return 'First Quarter';
+      if (age < 12.9) return 'Waxing Gibbous';
+      if (age < 16.6) return 'Full Moon';
+      if (age < 20.3) return 'Waning Gibbous';
+      if (age < 24.0) return 'Last Quarter';
+      return 'Waning Crescent';
+    }
+
+    function getHeroSVG(code, isDay) {
+      if (code === 0 && isDay) {
+        return `
+          <svg class="weather-svg" viewBox="0 0 64 64">
+            <defs>
+              <linearGradient id="sun-g" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FFE082" />
+                <stop offset="100%" stop-color="#FF8F00" />
+              </linearGradient>
+            </defs>
+            <g class="icon-spin">
+              <circle cx="32" cy="32" r="15" fill="url(#sun-g)" filter="drop-shadow(0 0 8px rgba(255, 143, 0, 0.6))" />
+              ${[0, 45, 90, 135, 180, 225, 270, 315].map(deg => `<rect x="30" y="2" width="4" height="9" rx="2" fill="#FFB300" transform="rotate(${deg} 32 32)" />`).join('')}
+            </g>
+          </svg>
+        `;
+      }
+      if (!isDay && (code === 0 || code === 1)) {
+        return `
+          <svg class="weather-svg" viewBox="0 0 64 64">
+            <defs>
+              <linearGradient id="moon-g" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ECEFF1" />
+                <stop offset="100%" stop-color="#90A4AE" />
+              </linearGradient>
+            </defs>
+            <path d="M38 12 C24.7 12 14 22.7 14 36 c0 13.3 10.7 24 24 24 4.8 0 9.3-1.4 13.1-3.9 -10.2-2.8-17.7-12.1-17.7-23.2 0-11.1 7.5-20.4 17.7-23.2 C47.3 13.4 42.8 12 38 12 Z" fill="url(#moon-g)" filter="drop-shadow(0 0 10px rgba(236, 239, 241, 0.5))" />
+          </svg>
+        `;
+      }
+      // Cloud / Rain / General
+      return `
+        <svg class="weather-svg" viewBox="0 0 64 64">
+          <defs>
+            <linearGradient id="cloud-g" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ECEFF1" />
+              <stop offset="100%" stop-color="#78909C" />
+            </linearGradient>
+          </defs>
+          <path d="M46 46H18C11.4 46 6 40.6 6 34c0-6.2 4.6-11.3 10.6-11.9C17.8 13.6 25 7 33.5 7c9.3 0 17 6.8 18.5 15.8 5.6 1.1 10 5.9 10 11.7 0 6.3-5.2 11.5-11.5 11.5z" fill="url(#cloud-g)" filter="drop-shadow(0 6px 12px rgba(0,0,0,0.3))" />
+        </svg>
+      `;
+    }
+
+    // Default Fallback Weather Data (Ensures instantaneous 0ms display, never blank)
+    let weatherData = {
+      current: {
+        temp: 18.5,
+        isDay: true,
+        weatherCode: 2,
+        windSpeed: 16.2,
+        windDir: 65,
+        precip: 0.0,
+        humidity: 65,
+        visibility: 10.0,
+        uvIndex: 4.5
+      },
+      todayHigh: 21.0,
+      todayLow: 12.5,
+      todayRain: 15,
+      hourly: [
+        { time: '12:00 PM', temp: 18.5, icon: '⛅', rain: 10 },
+        { time: '1:00 PM', temp: 19.8, icon: '☀️', rain: 5 },
+        { time: '2:00 PM', temp: 20.5, icon: '☀️', rain: 5 },
+        { time: '3:00 PM', temp: 21.0, icon: '🌤️', rain: 10 },
+        { time: '4:00 PM', temp: 19.5, icon: '⛅', rain: 15 },
+        { time: '5:00 PM', temp: 18.0, icon: '⛅', rain: 20 },
+        { time: '6:00 PM', temp: 16.5, icon: '☁️', rain: 20 },
+        { time: '7:00 PM', temp: 15.0, icon: '🌙', rain: 10 }
+      ],
+      weekly: [
+        { day: 'Today', high: 21.0, low: 12.5, icon: '⛅', rain: 15 },
+        { day: 'Sat', high: 22.5, low: 13.0, icon: '☀️', rain: 5 },
+        { day: 'Sun', high: 19.0, low: 11.5, icon: '🌦️', rain: 45 },
+        { day: 'Mon', high: 17.5, low: 10.0, icon: '🌧️', rain: 60 },
+        { day: 'Tue', high: 18.0, low: 9.5, icon: '⛅', rain: 20 },
+        { day: 'Wed', high: 20.0, low: 11.0, icon: '☀️', rain: 10 },
+        { day: 'Thu', high: 21.5, low: 12.0, icon: '🌤️', rain: 10 }
+      ]
+    };
+
+    function renderUI() {
+      const c = weatherData.current;
+      const info = getWeatherInfo(c.weatherCode, c.isDay);
+
+      // Hero
+      document.getElementById('heroIconContainer').innerHTML = getHeroSVG(c.weatherCode, c.isDay);
+      document.getElementById('currentTemp').textContent = `${c.temp.toFixed(1)}°`;
+      document.getElementById('conditionText').textContent = info.label;
+      document.getElementById('highLowRange').textContent = `H: ${weatherData.todayHigh.toFixed(1)}° | L: ${weatherData.todayLow.toFixed(1)}°`;
+      document.getElementById('currentRainProb').textContent = `${weatherData.todayRain}%`;
+
+      // Metrics
+      document.getElementById('valHumidity').textContent = `${c.humidity}%`;
+      document.getElementById('valUV').textContent = getUVText(c.uvIndex);
+      document.getElementById('valWind').textContent = `${c.windSpeed.toFixed(1)} km/h ${getWindDir(c.windDir)}`;
+      document.getElementById('valVisibility').textContent = `${c.visibility.toFixed(1)} km`;
+      document.getElementById('valPrecip').textContent = `${c.precip.toFixed(1)} mm`;
+      document.getElementById('valMoon').textContent = getMoonPhase();
+
+      // Hourly Grid
+      const hourlyContainer = document.getElementById('hourlyGrid');
+      hourlyContainer.innerHTML = weatherData.hourly.map(h => `
+        <div class="glass-panel hourly-item">
+          <div class="hourly-time">${h.time}</div>
+          <div class="hourly-icon">${h.icon}</div>
+          <div class="hourly-temp">${Math.round(h.temp)}°</div>
+          <div class="hourly-rain">💧 ${h.rain}%</div>
+        </div>
+      `).join('');
+
+      // Weekly Grid
+      const weeklyContainer = document.getElementById('weeklyGrid');
+      weeklyContainer.innerHTML = weatherData.weekly.map(w => `
+        <div class="glass-panel weekly-item">
+          <div class="weekly-day">${w.day}</div>
+          <div class="weekly-icon">${w.icon}</div>
+          <div class="weekly-high">${Math.round(w.high)}°</div>
+          <div class="weekly-low">${Math.round(w.low)}°</div>
+          <div class="weekly-rain">💧 ${w.rain}%</div>
+        </div>
+      `).join('');
+    }
+
+    // Live Clock
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('clockTime').textContent = now.toLocaleTimeString('en-NZ', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+      document.getElementById('clockDate').textContent = now.toLocaleDateString('en-NZ', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    }
+
+    // Generate subtle starry background
+    function createStars() {
+      const container = document.getElementById('bgParticles');
+      container.innerHTML = '';
+      for (let i = 0; i < 40; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.top = `${Math.random() * 80}%`;
+        star.style.width = `${Math.random() * 2.5 + 1}px`;
+        star.style.height = star.style.width;
+        star.style.animationDelay = `${Math.random() * 3}s`;
+        container.appendChild(star);
+      }
+    }
+
+    // Open-Meteo Live Christchurch Fetch
+    async function fetchLiveWeather() {
+      try {
+        const params = new URLSearchParams({
+          latitude: '-43.5321',
+          longitude: '172.6362',
+          current: 'temperature_2m,relative_humidity_2m,is_day,precipitation,weather_code,wind_speed_10m,wind_direction_10m,visibility',
+          daily: 'temperature_2m_max,temperature_2m_min,weather_code,uv_index_max,precipitation_probability_max',
+          hourly: 'temperature_2m,weather_code,precipitation_probability,is_day',
+          timezone: 'Pacific/Auckland',
+          forecast_days: '7'
+        });
+
+        const res = await fetch(`https://api.open-meteo.com/v1/forecast?${params}&t=${Date.now()}`);
+        if (!res.ok) throw new Error('API fetch failed');
+        const data = await res.json();
+
+        // Update current
+        weatherData.current = {
+          temp: data.current.temperature_2m,
+          isDay: data.current.is_day === 1,
+          weatherCode: data.current.weather_code,
+          windSpeed: data.current.wind_speed_10m,
+          windDir: data.current.wind_direction_10m,
+          precip: data.current.precipitation,
+          humidity: data.current.relative_humidity_2m,
+          visibility: (data.current.visibility || 10000) / 1000,
+          uvIndex: (data.daily && data.daily.uv_index_max && data.daily.uv_index_max[0]) || 4
+        };
+
+        weatherData.todayHigh = data.daily.temperature_2m_max[0];
+        weatherData.todayLow = data.daily.temperature_2m_min[0];
+        weatherData.todayRain = (data.daily.precipitation_probability_max && data.daily.precipitation_probability_max[0]) || 0;
+
+        // Weekly Forecast
+        weatherData.weekly = data.daily.time.map((t, idx) => {
+          const d = new Date(t);
+          const name = idx === 0 ? 'Today' : d.toLocaleDateString('en-NZ', { weekday: 'short' });
+          const code = data.daily.weather_code[idx];
+          return {
+            day: name,
+            high: data.daily.temperature_2m_max[idx],
+            low: data.daily.temperature_2m_min[idx],
+            icon: getWeatherInfo(code, true).icon,
+            rain: (data.daily.precipitation_probability_max && data.daily.precipitation_probability_max[idx]) || 0
+          };
+        });
+
+        // Hourly Forecast
+        const now = new Date();
+        const currentHourISO = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}T${String(now.getHours()).padStart(2, '0')}:00`;
+        let startIndex = data.hourly.time.findIndex(t => t >= currentHourISO);
+        if (startIndex === -1) startIndex = 0;
+
+        weatherData.hourly = [];
+        for (let i = startIndex; i < startIndex + 8 && i < data.hourly.time.length; i++) {
+          const d = new Date(data.hourly.time[i]);
+          const code = data.hourly.weather_code[i];
+          const isDay = data.hourly.is_day ? data.hourly.is_day[i] === 1 : true;
+          weatherData.hourly.push({
+            time: d.toLocaleTimeString('en-NZ', { hour: 'numeric', minute: '2-digit', hour12: true }),
+            temp: data.hourly.temperature_2m[i],
+            icon: getWeatherInfo(code, isDay).icon,
+            rain: (data.hourly.precipitation_probability && data.hourly.precipitation_probability[i]) || 0
+          });
+        }
+
+        renderUI();
+      } catch (err) {
+        console.warn('[Weather] Using cached/default weather state:', err);
+      }
+    }
+
+    // Slide Rotation & Synchronized Progress Bar
+    function updateCycle() {
+      const now = Date.now();
+      const totalCycle = SLIDE_DURATION * 3;
+      const cycleElapsed = now % totalCycle;
+
+      let activeSlide = 1;
+      if (cycleElapsed < SLIDE_DURATION) activeSlide = 1;
+      else if (cycleElapsed < SLIDE_DURATION * 2) activeSlide = 2;
+      else activeSlide = 3;
+
+      document.querySelectorAll('.slide').forEach((el, index) => {
+        if (index + 1 === activeSlide) {
+          el.classList.add('active');
+        } else {
+          el.classList.remove('active');
+        }
+      });
+
+      const slideElapsed = cycleElapsed % SLIDE_DURATION;
+      const progressPercent = (slideElapsed / SLIDE_DURATION) * 100;
+      document.getElementById('progressFill').style.width = `${progressPercent}%`;
+
+      requestAnimationFrame(updateCycle);
+    }
+
+    // Init
+    createStars();
+    renderUI();
+    updateClock();
+    setInterval(updateClock, 1000);
+    fetchLiveWeather();
+    setInterval(fetchLiveWeather, 10 * 60 * 1000);
+    requestAnimationFrame(updateCycle);
+  </script>
+</body>
+</html>
