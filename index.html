@@ -723,7 +723,7 @@
         <div class="glass-panel hourly-item">
           <div class="hourly-time">${h.time}</div>
           <div class="hourly-icon">${h.icon}</div>
-          <div class="hourly-temp">${Math.round(h.temp)}°</div>
+          <div class="hourly-temp">${h.temp.toFixed(1)}°</div>
           <div class="hourly-rain">💧 ${h.rain}%</div>
         </div>
       `).join('');
@@ -734,8 +734,8 @@
         <div class="glass-panel weekly-item">
           <div class="weekly-day">${w.day}</div>
           <div class="weekly-icon">${w.icon}</div>
-          <div class="weekly-high">${Math.round(w.high)}°</div>
-          <div class="weekly-low">${Math.round(w.low)}°</div>
+          <div class="weekly-high">${w.high.toFixed(1)}°</div>
+          <div class="weekly-low">${w.low.toFixed(1)}°</div>
           <div class="weekly-rain">💧 ${w.rain}%</div>
         </div>
       `).join('');
@@ -800,7 +800,7 @@
 
         // Weekly Forecast
         weatherData.weekly = data.daily.time.map((t, idx) => {
-          const d = new Date(t);
+          const d = new Date(t.replace(/-/g, '/'));
           const name = idx === 0 ? 'Today' : d.toLocaleDateString('en-NZ', { weekday: 'short' });
           const code = data.daily.weather_code[idx];
           return {
@@ -838,6 +838,7 @@
     }
 
     // Slide Rotation & Synchronized Progress Bar
+    let lastActiveSlide = null;
     function updateCycle() {
       const now = Date.now();
       const totalCycle = SLIDE_DURATION * 3;
@@ -848,13 +849,16 @@
       else if (cycleElapsed < SLIDE_DURATION * 2) activeSlide = 2;
       else activeSlide = 3;
 
-      document.querySelectorAll('.slide').forEach((el, index) => {
-        if (index + 1 === activeSlide) {
-          el.classList.add('active');
-        } else {
-          el.classList.remove('active');
-        }
-      });
+      if (activeSlide !== lastActiveSlide) {
+        lastActiveSlide = activeSlide;
+        document.querySelectorAll('.slide').forEach((el, index) => {
+          if (index + 1 === activeSlide) {
+            el.classList.add('active');
+          } else {
+            el.classList.remove('active');
+          }
+        });
+      }
 
       const slideElapsed = cycleElapsed % SLIDE_DURATION;
       const progressPercent = (slideElapsed / SLIDE_DURATION) * 100;
