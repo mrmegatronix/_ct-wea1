@@ -46,9 +46,11 @@
       position: absolute;
       inset: 0;
       z-index: 0;
-      pointer-events: none;
-      transition: background 1.5s ease;
-      background: radial-gradient(circle at 50% 30%, #0f172a 0%, #030408 100%);
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+    }
+    .bg-canvas.active {
+      opacity: 1;
     }
 
     /* Dynamic sky gradients (Slide 1) */
@@ -195,7 +197,7 @@
       display: flex;
       align-items: center;
       gap: 0.8vw;
-      font-size: clamp(2rem, 4.2vh, 3.2rem);
+      font-size: clamp(3rem, 6vh, 4.5rem);
       font-weight: 800;
       color: #ffffff;
       letter-spacing: -0.02em;
@@ -203,7 +205,7 @@
     }
 
     .sync-status {
-      font-size: clamp(1rem, 2vh, 1.4rem);
+      font-size: clamp(1.4rem, 2.8vh, 2rem);
       color: var(--text-muted);
       font-weight: 600;
       margin-left: calc(14px + 0.8vw);
@@ -231,7 +233,7 @@
     }
 
     .clock-time {
-      font-size: clamp(2.5rem, 6.2vh, 4.8rem);
+      font-size: clamp(3.5rem, 8.5vh, 7rem);
       font-weight: 700;
       color: #ffffff;
       line-height: 1;
@@ -240,17 +242,17 @@
     }
 
     .clock-date {
-      font-size: clamp(1.1rem, 2.6vh, 2rem);
+      font-size: clamp(1.5rem, 3.5vh, 2.8rem);
       color: var(--text-muted);
       margin-top: 0.3vh;
     }
 
-    /* Main Container & Slide System */
+     /* Main Container & Slide System */
     main {
       flex: 1;
       position: relative;
       z-index: 10;
-      padding: 1rem 3rem 2.5rem 3rem;
+      padding: 1rem 2rem 2.5rem 2rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -258,7 +260,7 @@
 
     .slide {
       position: absolute;
-      inset: 1rem 3rem 2.5rem 3rem;
+      inset: 1rem 2rem 2.5rem 2rem;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -289,7 +291,7 @@
     }
 
     .hero-card {
-      max-width: 1300px;
+      max-width: 1750px;
     }
 
     .hero-center {
@@ -300,7 +302,7 @@
     }
 
     .temp-big {
-      font-size: clamp(6rem, 15vh, 12rem);
+      font-size: clamp(8rem, 18vh, 15rem);
       font-weight: 800;
       line-height: 0.9;
       color: #ffffff;
@@ -308,14 +310,14 @@
     }
 
     .cond-title {
-      font-size: clamp(2rem, 5vh, 3.8rem);
+      font-size: clamp(2.5rem, 6vh, 4.8rem);
       font-weight: 800;
       margin-bottom: 0.5vh;
       text-shadow: 0 4px 15px rgba(0,0,0,0.5);
     }
 
     .hl-range {
-      font-size: clamp(1.4rem, 3.2vh, 2.4rem);
+      font-size: clamp(1.6rem, 3.8vh, 3rem);
       font-weight: 600;
       color: var(--text-muted);
       display: flex;
@@ -359,7 +361,7 @@
     }
 
     .metric-label {
-      font-size: clamp(0.8rem, 1.6vh, 1.2rem);
+      font-size: clamp(1rem, 2vh, 1.4rem);
       text-transform: uppercase;
       letter-spacing: 0.1em;
       color: var(--text-muted);
@@ -367,7 +369,7 @@
     }
 
     .metric-val {
-      font-size: clamp(1.1rem, 2.6vh, 2rem);
+      font-size: clamp(1.4rem, 3vh, 2.4rem);
       font-weight: 700;
       color: #ffffff;
       white-space: nowrap;
@@ -375,11 +377,11 @@
 
     /* Slide 2: Hourly Forecast */
     .hourly-card {
-      max-width: 1350px;
+      max-width: 1750px;
     }
 
     .section-title {
-      font-size: clamp(2.2rem, 5vh, 3.8rem);
+      font-size: clamp(2.5rem, 6vh, 4.5rem);
       font-weight: 800;
       margin-bottom: clamp(1rem, 2.5vh, 2.2rem);
       text-align: center;
@@ -430,7 +432,7 @@
 
     /* Slide 3: 7-Day Forecast */
     .weekly-card {
-      max-width: 1350px;
+      max-width: 1750px;
     }
 
     .weekly-grid {
@@ -488,7 +490,7 @@
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 8px;
+      height: 16px;
       background: rgba(255, 255, 255, 0.1);
       z-index: 100;
     }
@@ -497,19 +499,19 @@
       height: 100%;
       width: 0%;
       background: linear-gradient(90deg, var(--accent-blue), var(--primary), var(--accent-gold));
-      box-shadow: 0 0 15px rgba(158, 202, 255, 0.8);
+      box-shadow: 0 0 20px rgba(158, 202, 255, 0.8);
       position: relative;
     }
 
     .progress-glow {
       position: absolute;
       right: 0;
-      top: -3px;
-      bottom: -3px;
-      width: 8px;
+      top: -4px;
+      bottom: -4px;
+      width: 10px;
       background: #ffffff;
-      filter: blur(2px);
-      border-radius: 4px;
+      filter: blur(3px);
+      border-radius: 6px;
     }
 
     /* Animated SVG Icons */
@@ -524,6 +526,12 @@
       width: clamp(50px, 9vh, 90px);
       height: clamp(50px, 9vh, 90px);
       filter: drop-shadow(0 0 10px rgba(158, 202, 255, 0.25));
+      overflow: visible !important;
+    }
+
+    .metric-svg {
+      width: clamp(40px, 6vh, 64px);
+      height: clamp(40px, 6vh, 64px);
       overflow: visible !important;
     }
 
@@ -628,7 +636,8 @@
 </head>
 <body>
   <!-- Ambient Dynamic Canvas -->
-  <div class="bg-canvas" id="bgCanvas"></div>
+  <div class="bg-canvas active" id="bgCanvas1"></div>
+  <div class="bg-canvas" id="bgCanvas2"></div>
   <div class="bg-particles" id="bgParticles"></div>
   <canvas id="weatherCanvas" style="position: absolute; inset: 0; pointer-events: none; z-index: 2;"></canvas>
 
@@ -638,12 +647,15 @@
       <div class="location-group">
         <div class="location-title">
           <div class="pulse-dot"></div>
-          <span>Christchurch, NZ</span>
+          <span>CHRISTCHURCH, NZ</span>
         </div>
         <div class="sync-status">
           Last Sync: <span id="lastSyncTime">--:--</span>
         </div>
       </div>
+    </div>
+    <div class="header-center" style="position: absolute; left: 50%; transform: translateX(-50%); text-align: center;">
+      <div class="page-title" style="font-size: clamp(2rem, 4.5vh, 3.5rem); font-weight: 900; letter-spacing: 0.25em; color: rgba(255, 255, 255, 0.9); background: linear-gradient(180deg, #ffffff 30%, rgba(255, 255, 255, 0.4) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 30px rgba(255, 255, 255, 0.1); text-transform: uppercase;">WEATHER</div>
     </div>
     <div class="header-right">
       <div class="clock-time" id="clockTime">--:--:--</div>
@@ -668,7 +680,7 @@
           <div class="hl-range">
             <span id="highLowRange">H: --.-° | L: --.-°</span>
             <span class="rain-tag">
-              💧 <span id="currentRainProb">--</span>% Rain
+              💧 <span id="currentRainProb">--</span> Rain
             </span>
           </div>
         </div>
@@ -676,32 +688,32 @@
         <!-- 6 Metrics Grid -->
         <div class="metrics-grid">
           <div class="glass-panel metric-box" style="--sheen-delay: 0.2s">
-            <div class="metric-icon">💧</div>
+            <div class="metric-icon" id="iconHumidity"></div>
             <div class="metric-label">Humidity</div>
             <div class="metric-val" id="valHumidity">--%</div>
           </div>
           <div class="glass-panel metric-box" style="--sheen-delay: 0.4s">
-            <div class="metric-icon">☀️</div>
+            <div class="metric-icon" id="iconUV"></div>
             <div class="metric-label">UV Index</div>
             <div class="metric-val" id="valUV">-- Low</div>
           </div>
           <div class="glass-panel metric-box" style="--sheen-delay: 0.6s">
-            <div class="metric-icon" id="windIcon">🧭</div>
+            <div class="metric-icon" id="iconWind"></div>
             <div class="metric-label">Wind</div>
             <div class="metric-val" id="valWind">-- km/h --</div>
           </div>
           <div class="glass-panel metric-box" style="--sheen-delay: 0.8s">
-            <div class="metric-icon">👁️</div>
+            <div class="metric-icon" id="iconVisibility"></div>
             <div class="metric-label">Visibility</div>
             <div class="metric-val" id="valVisibility">-- km</div>
           </div>
           <div class="glass-panel metric-box" style="--sheen-delay: 1.0s">
-            <div class="metric-icon">🌧️</div>
+            <div class="metric-icon" id="iconPrecip"></div>
             <div class="metric-label">Precipitation</div>
             <div class="metric-val" id="valPrecip">-- mm</div>
           </div>
           <div class="glass-panel metric-box" style="--sheen-delay: 1.2s">
-            <div class="metric-icon">🌙</div>
+            <div class="metric-icon" id="iconMoon"></div>
             <div class="metric-label">Moon Phase</div>
             <div class="metric-val" id="valMoon">--</div>
           </div>
@@ -1067,6 +1079,129 @@
       `;
     }
 
+    function getHumiditySVG(sizeClass) {
+      return `
+        <svg class="${sizeClass} icon-float" viewBox="0 0 64 64" fill="none" stroke="var(--accent-blue)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M32 4c0 0 18 16 18 30a18 18 0 1 1-36 0C14 20 32 4 32 4z" fill="rgba(56, 189, 248, 0.15)" />
+        </svg>
+      `;
+    }
+
+    function getUVSVG(sizeClass) {
+      return `
+        <svg class="${sizeClass}" viewBox="0 0 64 64" fill="none" stroke="var(--accent-gold)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+          <g class="icon-spin">
+            <circle cx="32" cy="32" r="12" fill="rgba(245, 158, 11, 0.15)" />
+            ${[0, 45, 90, 135, 180, 225, 270, 315].map(deg => `<line x1="32" y1="6" x2="32" y2="14" transform="rotate(${deg} 32 32)" />`).join('')}
+          </g>
+        </svg>
+      `;
+    }
+
+    function getWindSVG(sizeClass) {
+      return `
+        <svg class="${sizeClass}" viewBox="0 0 64 64" fill="none" stroke="var(--primary)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="32" cy="32" r="24" stroke-dasharray="4 4" opacity="0.5" />
+          <g class="icon-float">
+            <polygon points="32,8 38,28 32,24 26,28" fill="rgba(158, 202, 255, 0.25)" />
+            <polygon points="32,56 38,36 32,40 26,36" fill="rgba(158, 202, 255, 0.05)" />
+          </g>
+        </svg>
+      `;
+    }
+
+    function getBinocularsSVG(sizeClass) {
+      return `
+        <svg class="${sizeClass} icon-float" viewBox="0 0 64 64" fill="none" stroke="var(--primary)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 20h12v28H12z" fill="rgba(158, 202, 255, 0.1)"/>
+          <path d="M40 20h12v28H40z" fill="rgba(158, 202, 255, 0.1)"/>
+          <path d="M24 24h16M24 38h16M32 20v24" stroke-width="3"/>
+          <circle cx="18" cy="48" r="6" stroke-width="5"/>
+          <circle cx="46" cy="48" r="6" stroke-width="5"/>
+        </svg>
+      `;
+    }
+
+    function getPrecipSVG(sizeClass) {
+      return `
+        <svg class="${sizeClass} icon-float" viewBox="0 0 64 64" fill="none" stroke="var(--accent-blue)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M46 32H18C13.5 32 10 28.5 10 24c0-4.5 3.5-8 8-8 1-5 5-9 10-9 6 0 11 4.5 12 10.5 3.5 1 6 4 6 7.5 0 4.5-3.5 8-8 8z" fill="rgba(56, 189, 248, 0.1)" stroke="var(--text-muted)" stroke-width="3" />
+          <line x1="22" y1="40" x2="20" y2="48" class="icon-rain-drop" style="animation-delay: 0s;" />
+          <line x1="32" y1="40" x2="30" y2="48" class="icon-rain-drop" style="animation-delay: 0.4s;" />
+          <line x1="42" y1="40" x2="40" y2="48" class="icon-rain-drop" style="animation-delay: 0.2s;" />
+        </svg>
+      `;
+    }
+
+    function getMoonPhaseSVG(phase, sizeClass) {
+      const darkColor = 'rgba(255,255,255,0.08)';
+      const lightColor = 'var(--text-main)';
+      
+      let fillLeft = darkColor;
+      let fillRight = darkColor;
+      
+      if (phase === 'Full Moon') {
+        fillLeft = lightColor;
+        fillRight = lightColor;
+      } else if (phase === 'New Moon') {
+        fillLeft = darkColor;
+        fillRight = darkColor;
+      } else if (phase === 'First Quarter') {
+        fillLeft = darkColor;
+        fillRight = lightColor;
+      } else if (phase === 'Last Quarter') {
+        fillLeft = lightColor;
+        fillRight = darkColor;
+      } else if (phase.includes('Crescent')) {
+        const isWaning = phase.includes('Waning');
+        const path = isWaning 
+          ? 'M 32 6 A 26 26 0 0 0 32 58 A 20 20 0 0 1 32 6 Z'
+          : 'M 32 6 A 26 26 0 0 1 32 58 A 20 20 0 0 0 32 6 Z';
+        
+        return `
+          <svg class="${sizeClass} icon-float" viewBox="0 0 64 64" fill="none" stroke="var(--text-muted)" stroke-width="2">
+            <circle cx="32" cy="32" r="26" fill="${darkColor}" />
+            <path d="${path}" fill="${lightColor}" stroke="none" />
+          </svg>
+        `;
+      } else if (phase.includes('Gibbous')) {
+        const isWaning = phase.includes('Waning');
+        const path = isWaning
+          ? 'M 32 6 A 26 26 0 0 0 32 58 A 12 12 0 0 0 32 6 Z'
+          : 'M 32 6 A 26 26 0 0 1 32 58 A 12 12 0 0 1 32 6 Z';
+        
+        return `
+          <svg class="${sizeClass} icon-float" viewBox="0 0 64 64" fill="none" stroke="var(--text-muted)" stroke-width="2">
+            <circle cx="32" cy="32" r="26" fill="${lightColor}" />
+            <path d="${path}" fill="${darkColor}" stroke="none" />
+          </svg>
+        `;
+      }
+
+      return `
+        <svg class="${sizeClass} icon-float" viewBox="0 0 64 64" fill="none" stroke="var(--text-muted)" stroke-width="2">
+          <path d="M32,6 A26,26 0 0,0 32,58 Z" fill="${fillLeft}" />
+          <path d="M32,6 A26,26 0 0,1 32,58 Z" fill="${fillRight}" />
+          <circle cx="32" cy="32" r="26" stroke="var(--text-muted)" stroke-width="2" />
+        </svg>
+      `;
+    }
+
+    let currentCanvasLayer = 1;
+    function updateBackgroundGradient(bgClass) {
+      const layer1 = document.getElementById('bgCanvas1');
+      const layer2 = document.getElementById('bgCanvas2');
+      if (!layer1 || !layer2) return;
+
+      const nextLayer = currentCanvasLayer === 1 ? layer2 : layer1;
+      const prevLayer = currentCanvasLayer === 1 ? layer1 : layer2;
+
+      nextLayer.className = `bg-canvas ${bgClass} active`;
+      prevLayer.className = `bg-canvas ${prevLayer.className.replace('active', '').trim()}`;
+
+      currentCanvasLayer = currentCanvasLayer === 1 ? 2 : 1;
+    }
+
     // Default Fallback Weather Data (Empty placeholders, actual data fetched immediately)
     let weatherData = {
       current: {
@@ -1094,8 +1229,7 @@
       // Force background update
       const activeSlide = lastActiveSlide || 1;
       const bgClass = getBackgroundClass(activeSlide, c.isDay, c.weatherCode);
-      const bgEl = document.getElementById('bgCanvas');
-      if (bgEl) bgEl.className = `bg-canvas ${bgClass}`;
+      updateBackgroundGradient(bgClass);
 
       // Update particle canvas
       updateWeatherParticles(c.weatherCode);
@@ -1113,6 +1247,13 @@
       document.getElementById('currentRainProb').textContent = `${weatherData.todayRain}%`;
 
       // Metrics
+      document.getElementById('iconHumidity').innerHTML = getHumiditySVG('metric-svg');
+      document.getElementById('iconUV').innerHTML = getUVSVG('metric-svg');
+      document.getElementById('iconWind').innerHTML = getWindSVG('metric-svg');
+      document.getElementById('iconVisibility').innerHTML = getBinocularsSVG('metric-svg');
+      document.getElementById('iconPrecip').innerHTML = getPrecipSVG('metric-svg');
+      document.getElementById('iconMoon').innerHTML = getMoonPhaseSVG(getMoonPhase(), 'metric-svg');
+
       document.getElementById('valHumidity').textContent = `${c.humidity}%`;
       document.getElementById('valUV').textContent = getUVText(c.uvIndex);
       document.getElementById('valWind').textContent = `${c.windSpeed.toFixed(1)} km/h ${getWindDir(c.windDir)}`;
@@ -1279,8 +1420,7 @@
         // Update dynamic background gradient on slide change
         const c = weatherData.current;
         const bgClass = getBackgroundClass(activeSlide, c.isDay, c.weatherCode);
-        const bgEl = document.getElementById('bgCanvas');
-        if (bgEl) bgEl.className = `bg-canvas ${bgClass}`;
+        updateBackgroundGradient(bgClass);
       }
 
       const slideElapsed = cycleElapsed % SLIDE_DURATION;
