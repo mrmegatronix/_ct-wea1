@@ -199,6 +199,19 @@
       text-transform: uppercase;
     }
 
+    .sync-badge {
+      display: flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.5rem 1.4rem;
+      border-radius: 999px;
+      font-size: 1.3rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      letter-spacing: 0.03em;
+    }
+
     .pulse-dot {
       width: 12px;
       height: 12px;
@@ -214,7 +227,7 @@
     }
 
     .header-title {
-      font-size: 2.6rem;
+      font-size: 3rem;
       font-weight: 800;
       letter-spacing: -0.02em;
       background: linear-gradient(135deg, #ffffff 40%, var(--primary) 100%);
@@ -228,14 +241,14 @@
 
     .clock-time {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 3.6rem;
+      font-size: 4.8rem;
       font-weight: 700;
       color: #ffffff;
       line-height: 1;
     }
 
     .clock-date {
-      font-size: 1.6rem;
+      font-size: 2rem;
       color: var(--text-muted);
       margin-top: 0.3rem;
     }
@@ -298,14 +311,14 @@
     }
 
     .cond-title {
-      font-size: clamp(3rem, 5vw, 4.4rem);
+      font-size: clamp(3.5rem, 6vw, 5rem);
       font-weight: 800;
       margin-bottom: 0.6rem;
       text-shadow: 0 4px 15px rgba(0,0,0,0.5);
     }
 
     .hl-range {
-      font-size: 2.2rem;
+      font-size: 2.8rem;
       font-weight: 600;
       color: var(--text-muted);
       display: flex;
@@ -344,12 +357,12 @@
     }
 
     .metric-icon {
-      font-size: 2.4rem;
+      font-size: 3.2rem;
       margin-bottom: 0.6rem;
     }
 
     .metric-label {
-      font-size: 1rem;
+      font-size: 1.3rem;
       text-transform: uppercase;
       letter-spacing: 0.1em;
       color: var(--text-muted);
@@ -357,7 +370,7 @@
     }
 
     .metric-val {
-      font-size: 1.65rem;
+      font-size: 2.2rem;
       font-weight: 700;
       color: #ffffff;
       white-space: nowrap;
@@ -375,7 +388,7 @@
     }
 
     .section-title {
-      font-size: 3.2rem;
+      font-size: 4rem;
       font-weight: 800;
       margin-bottom: 2.2rem;
       text-align: center;
@@ -384,13 +397,13 @@
     .hourly-grid {
       display: grid;
       grid-template-columns: repeat(8, 1fr);
-      gap: 1.25rem;
+      gap: 1.5rem;
       width: 100%;
     }
 
     .hourly-item {
       border-radius: 1.75rem;
-      padding: 1.8rem 0.6rem;
+      padding: 2rem 0.6rem;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -398,7 +411,7 @@
     }
 
     .hourly-time {
-      font-size: 1.4rem;
+      font-size: 1.8rem;
       font-weight: 600;
       color: var(--text-muted);
       margin-bottom: 1rem;
@@ -413,13 +426,13 @@
 
     .hourly-temp {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 2.5rem;
+      font-size: 3rem;
       font-weight: 700;
       margin-bottom: 0.5rem;
     }
 
     .hourly-rain {
-      font-size: 1.15rem;
+      font-size: 1.5rem;
       font-weight: 600;
       color: var(--accent-blue);
     }
@@ -438,13 +451,13 @@
     .weekly-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 1.25rem;
+      gap: 1.5rem;
       width: 100%;
     }
 
     .weekly-item {
       border-radius: 1.75rem;
-      padding: 1.8rem 1rem;
+      padding: 2rem 1rem;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -452,7 +465,7 @@
     }
 
     .weekly-day {
-      font-size: 1.6rem;
+      font-size: 2rem;
       font-weight: 700;
       margin-bottom: 1rem;
     }
@@ -466,21 +479,21 @@
 
     .weekly-high {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 2.5rem;
+      font-size: 3.2rem;
       font-weight: 700;
       color: #ffffff;
     }
 
     .weekly-low {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 1.7rem;
+      font-size: 2.2rem;
       font-weight: 600;
       color: var(--text-muted);
       margin-bottom: 0.8rem;
     }
 
     .weekly-rain {
-      font-size: 1.15rem;
+      font-size: 1.5rem;
       font-weight: 600;
       color: var(--accent-blue);
     }
@@ -636,6 +649,9 @@
         <div class="pulse-dot"></div>
         <span>Christchurch, NZ</span>
       </div>
+      <div class="sync-badge">
+        <span>Sync: <span id="lastSyncTime">--:--</span></span>
+      </div>
       <div class="header-title">Atmospheric Display</div>
     </div>
     <div class="header-right">
@@ -653,15 +669,15 @@
           <div id="heroIconContainer" class="icon-float">
             <!-- Animated SVG Icon Injected Here -->
           </div>
-          <div class="temp-big" id="currentTemp">18.5°</div>
+          <div class="temp-big" id="currentTemp">--.-°</div>
         </div>
 
         <div style="text-align: center;">
-          <div class="cond-title" id="conditionText">Partly Cloudy</div>
+          <div class="cond-title" id="conditionText">Loading Live Data...</div>
           <div class="hl-range">
-            <span id="highLowRange">H: 21.0° | L: 12.0°</span>
+            <span id="highLowRange">H: --.-° | L: --.-°</span>
             <span class="rain-tag">
-              💧 <span id="currentRainProb">10%</span> Rain
+              💧 <span id="currentRainProb">--</span>% Rain
             </span>
           </div>
         </div>
@@ -671,32 +687,32 @@
           <div class="glass-panel metric-box" style="--sheen-delay: 0.2s">
             <div class="metric-icon">💧</div>
             <div class="metric-label">Humidity</div>
-            <div class="metric-val" id="valHumidity">68%</div>
+            <div class="metric-val" id="valHumidity">--%</div>
           </div>
           <div class="glass-panel metric-box" style="--sheen-delay: 0.4s">
             <div class="metric-icon">☀️</div>
             <div class="metric-label">UV Index</div>
-            <div class="metric-val" id="valUV">4.2 Mod</div>
+            <div class="metric-val" id="valUV">-- Low</div>
           </div>
           <div class="glass-panel metric-box" style="--sheen-delay: 0.6s">
             <div class="metric-icon" id="windIcon">🧭</div>
             <div class="metric-label">Wind</div>
-            <div class="metric-val" id="valWind">18.5 km/h NE</div>
+            <div class="metric-val" id="valWind">-- km/h --</div>
           </div>
           <div class="glass-panel metric-box" style="--sheen-delay: 0.8s">
             <div class="metric-icon">👁️</div>
             <div class="metric-label">Visibility</div>
-            <div class="metric-val" id="valVisibility">10.0 km</div>
+            <div class="metric-val" id="valVisibility">-- km</div>
           </div>
           <div class="glass-panel metric-box" style="--sheen-delay: 1.0s">
             <div class="metric-icon">🌧️</div>
             <div class="metric-label">Precipitation</div>
-            <div class="metric-val" id="valPrecip">0.0 mm</div>
+            <div class="metric-val" id="valPrecip">-- mm</div>
           </div>
           <div class="glass-panel metric-box" style="--sheen-delay: 1.2s">
             <div class="metric-icon">🌙</div>
             <div class="metric-label">Moon Phase</div>
-            <div class="metric-val" id="valMoon">Waxing Gibb</div>
+            <div class="metric-val" id="valMoon">--</div>
           </div>
         </div>
       </div>
@@ -1060,41 +1076,24 @@
       `;
     }
 
-    // Default Fallback Weather Data (Ensures instantaneous 0ms display, never blank)
+    // Default Fallback Weather Data (Empty placeholders, actual data fetched immediately)
     let weatherData = {
       current: {
-        temp: 18.5,
+        temp: 0,
         isDay: true,
-        weatherCode: 2,
-        windSpeed: 16.2,
-        windDir: 65,
-        precip: 0.0,
-        humidity: 65,
-        visibility: 10.0,
-        uvIndex: 4.5
+        weatherCode: 0,
+        windSpeed: 0,
+        windDir: 0,
+        precip: 0,
+        humidity: 0,
+        visibility: 0,
+        uvIndex: 0
       },
-      todayHigh: 21.0,
-      todayLow: 12.5,
-      todayRain: 15,
-      hourly: [
-        { time: '12:00 PM', temp: 18.5, icon: '⛅', rain: 10 },
-        { time: '1:00 PM', temp: 19.8, icon: '☀️', rain: 5 },
-        { time: '2:00 PM', temp: 20.5, icon: '☀️', rain: 5 },
-        { time: '3:00 PM', temp: 21.0, icon: '🌤️', rain: 10 },
-        { time: '4:00 PM', temp: 19.5, icon: '⛅', rain: 15 },
-        { time: '5:00 PM', temp: 18.0, icon: '⛅', rain: 20 },
-        { time: '6:00 PM', temp: 16.5, icon: '☁️', rain: 20 },
-        { time: '7:00 PM', temp: 15.0, icon: '🌙', rain: 10 }
-      ],
-      weekly: [
-        { day: 'Today', high: 21.0, low: 12.5, icon: '⛅', rain: 15 },
-        { day: 'Sat', high: 22.5, low: 13.0, icon: '☀️', rain: 5 },
-        { day: 'Sun', high: 19.0, low: 11.5, icon: '🌦️', rain: 45 },
-        { day: 'Mon', high: 17.5, low: 10.0, icon: '🌧️', rain: 60 },
-        { day: 'Tue', high: 18.0, low: 9.5, icon: '⛅', rain: 20 },
-        { day: 'Wed', high: 20.0, low: 11.0, icon: '☀️', rain: 10 },
-        { day: 'Thu', high: 21.5, low: 12.0, icon: '🌤️', rain: 10 }
-      ]
+      todayHigh: 0,
+      todayLow: 0,
+      todayRain: 0,
+      hourly: [],
+      weekly: []
     };
 
     function renderUI() {
@@ -1157,7 +1156,14 @@
     // Live Clock
     function updateClock() {
       const now = new Date();
-      document.getElementById('clockTime').textContent = now.toLocaleTimeString('en-NZ', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+      const hrs = String(now.getHours()).padStart(2, '0');
+      const mins = String(now.getMinutes()).padStart(2, '0');
+      const secs = String(now.getSeconds()).padStart(2, '0');
+      const showColon = now.getSeconds() % 2 === 0;
+      
+      const colonHtml = showColon ? ':' : '<span style="opacity: 0.25;">:</span>';
+      
+      document.getElementById('clockTime').innerHTML = `${hrs}${colonHtml}${mins}${colonHtml}${secs}`;
       document.getElementById('clockDate').textContent = now.toLocaleDateString('en-NZ', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
     }
 
@@ -1194,6 +1200,12 @@
         if (!res.ok) throw new Error('API fetch failed');
         const data = await res.json();
 
+        // Calculate Hourly Start Index first to prevent declaration ReferenceErrors
+        const now = new Date();
+        const currentHourISO = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}T${String(now.getHours()).padStart(2, '0')}:00`;
+        let startIndex = data.hourly.time.findIndex(t => t >= currentHourISO);
+        if (startIndex === -1) startIndex = 0;
+
         // Update current
         weatherData.current = {
           temp: data.current.temperature_2m,
@@ -1225,25 +1237,25 @@
           };
         });
 
-        // Hourly Forecast
-        const now = new Date();
-        const currentHourISO = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}T${String(now.getHours()).padStart(2, '0')}:00`;
-        let startIndex = data.hourly.time.findIndex(t => t >= currentHourISO);
-        if (startIndex === -1) startIndex = 0;
-
         weatherData.hourly = [];
         for (let i = startIndex; i < startIndex + 8 && i < data.hourly.time.length; i++) {
           const d = new Date(data.hourly.time[i]);
           const code = data.hourly.weather_code[i];
           const isDay = data.hourly.is_day ? data.hourly.is_day[i] === 1 : true;
           weatherData.hourly.push({
-            time: d.toLocaleTimeString('en-NZ', { hour: 'numeric', minute: '2-digit', hour12: true }),
+            time: d.toLocaleTimeString('en-NZ', { hour: '2-digit', minute: '2-digit', hour12: false }),
             temp: data.hourly.temperature_2m[i],
             weatherCode: code,
             isDay: isDay,
             rain: (data.hourly.precipitation_probability && data.hourly.precipitation_probability[i]) || 0
           });
         }
+
+        // Update Sync Timestamp
+        const syncNow = new Date();
+        const syncHrs = String(syncNow.getHours()).padStart(2, '0');
+        const syncMins = String(syncNow.getMinutes()).padStart(2, '0');
+        document.getElementById('lastSyncTime').textContent = `${syncHrs}:${syncMins}`;
 
         renderUI();
       } catch (err) {
@@ -1290,11 +1302,10 @@
     // Init
     initWeatherCanvas();
     createStars();
-    renderUI();
     updateClock();
     setInterval(updateClock, 1000);
     fetchLiveWeather();
-    setInterval(fetchLiveWeather, 10 * 60 * 1000);
+    setInterval(fetchLiveWeather, 15 * 60 * 1000); // 15 minute auto-updater
     requestAnimationFrame(updateCycle);
   </script>
 </body>
