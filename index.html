@@ -185,36 +185,35 @@
       gap: 1.5rem;
     }
 
-    .loc-badge {
+    .location-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3vh;
+    }
+
+    .location-title {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      padding: 0.5rem 1.4rem;
-      border-radius: 999px;
-      font-size: 1.3rem;
+      gap: 0.8vw;
+      font-size: clamp(2rem, 4.2vh, 3.2rem);
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+      text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .sync-status {
+      font-size: clamp(1rem, 2vh, 1.4rem);
+      color: var(--text-muted);
       font-weight: 600;
-      letter-spacing: 0.05em;
+      margin-left: calc(14px + 0.8vw);
+      letter-spacing: 0.02em;
       text-transform: uppercase;
     }
 
-    .sync-badge {
-      display: flex;
-      align-items: center;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 0.5rem 1.4rem;
-      border-radius: 999px;
-      font-size: 1.3rem;
-      font-weight: 500;
-      color: var(--text-muted);
-      letter-spacing: 0.03em;
-    }
-
     .pulse-dot {
-      width: 12px;
-      height: 12px;
+      width: 14px;
+      height: 14px;
       background: #10b981;
       border-radius: 50%;
       box-shadow: 0 0 12px #10b981;
@@ -226,15 +225,6 @@
       50% { opacity: 0.4; transform: scale(0.8); }
     }
 
-    .header-title {
-      font-size: 3rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      background: linear-gradient(135deg, #ffffff 40%, var(--primary) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
     .header-right {
       text-align: right;
       white-space: nowrap;
@@ -242,7 +232,7 @@
 
     .clock-time {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 4.8rem;
+      font-size: clamp(2.5rem, 6.2vh, 4.8rem);
       font-weight: 700;
       color: #ffffff;
       line-height: 1;
@@ -251,9 +241,9 @@
     }
 
     .clock-date {
-      font-size: 2rem;
+      font-size: clamp(1.1rem, 2.6vh, 2rem);
       color: var(--text-muted);
-      margin-top: 0.3rem;
+      margin-top: 0.3vh;
     }
 
     /* Main Container & Slide System */
@@ -287,26 +277,32 @@
     }
 
     /* Slide 1: Current Hero */
-    .hero-card {
+    .hero-card, .hourly-card, .weekly-card {
       width: 100%;
-      max-width: 1300px;
-      border-radius: 3rem;
-      padding: 3rem 4rem;
+      height: clamp(500px, 78vh, 780px);
+      border-radius: clamp(1.5rem, 3.5vh, 3rem);
+      padding: clamp(1.5rem, 4vh, 3rem) clamp(2rem, 4vw, 4rem);
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
       align-items: center;
+      box-sizing: border-box;
+    }
+
+    .hero-card {
+      max-width: 1300px;
     }
 
     .hero-center {
       display: flex;
       align-items: center;
-      gap: 5rem;
-      margin-bottom: 2rem;
+      gap: clamp(2rem, 5vw, 5rem);
+      margin-bottom: clamp(1rem, 2.5vh, 2rem);
     }
 
     .temp-big {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(8rem, 16vw, 13rem);
+      font-size: clamp(6rem, 15vh, 12rem);
       font-weight: 800;
       line-height: 0.9;
       color: #ffffff;
@@ -314,14 +310,14 @@
     }
 
     .cond-title {
-      font-size: clamp(3.5rem, 6vw, 5rem);
+      font-size: clamp(2rem, 5vh, 3.8rem);
       font-weight: 800;
-      margin-bottom: 0.6rem;
+      margin-bottom: 0.5vh;
       text-shadow: 0 4px 15px rgba(0,0,0,0.5);
     }
 
     .hl-range {
-      font-size: 2.8rem;
+      font-size: clamp(1.4rem, 3.2vh, 2.4rem);
       font-weight: 600;
       color: var(--text-muted);
       display: flex;
@@ -339,14 +335,14 @@
     .metrics-grid {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
-      gap: 1.25rem;
+      gap: clamp(0.5rem, 1.8vw, 1.25rem);
       width: 100%;
-      margin-top: 2rem;
+      margin-top: clamp(1rem, 2.5vh, 2rem);
     }
 
     .metric-box {
-      border-radius: 1.5rem;
-      padding: 1.6rem 1rem;
+      border-radius: clamp(1rem, 2vh, 1.5rem);
+      padding: clamp(0.8rem, 2.2vh, 1.6rem) clamp(0.5rem, 1vw, 1rem);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -360,20 +356,20 @@
     }
 
     .metric-icon {
-      font-size: 3.2rem;
-      margin-bottom: 0.6rem;
+      font-size: clamp(1.8rem, 4vh, 3.2rem);
+      margin-bottom: 0.4vh;
     }
 
     .metric-label {
-      font-size: 1.3rem;
+      font-size: clamp(0.8rem, 1.6vh, 1.2rem);
       text-transform: uppercase;
       letter-spacing: 0.1em;
       color: var(--text-muted);
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.2vh;
     }
 
     .metric-val {
-      font-size: 2.2rem;
+      font-size: clamp(1.1rem, 2.6vh, 2rem);
       font-weight: 700;
       color: #ffffff;
       white-space: nowrap;
@@ -381,32 +377,26 @@
 
     /* Slide 2: Hourly Forecast */
     .hourly-card {
-      width: 100%;
       max-width: 1350px;
-      border-radius: 3rem;
-      padding: 3rem 4rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
     }
 
     .section-title {
-      font-size: 4rem;
+      font-size: clamp(2.2rem, 5vh, 3.8rem);
       font-weight: 800;
-      margin-bottom: 2.2rem;
+      margin-bottom: clamp(1rem, 2.5vh, 2.2rem);
       text-align: center;
     }
 
     .hourly-grid {
       display: grid;
       grid-template-columns: repeat(8, 1fr);
-      gap: 1.5rem;
+      gap: clamp(0.5rem, 1.5vw, 1.5rem);
       width: 100%;
     }
 
     .hourly-item {
-      border-radius: 1.75rem;
-      padding: 2rem 0.6rem;
+      border-radius: clamp(1rem, 2vh, 1.75rem);
+      padding: clamp(1.2rem, 2.5vh, 2rem) 0.6rem;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -414,10 +404,10 @@
     }
 
     .hourly-time {
-      font-size: 1.8rem;
+      font-size: clamp(1rem, 2.2vh, 1.6rem);
       font-weight: 600;
       color: var(--text-muted);
-      margin-bottom: 1rem;
+      margin-bottom: 1vh;
     }
 
     .hourly-icon {
@@ -430,38 +420,32 @@
 
     .hourly-temp {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 3rem;
+      font-size: clamp(1.6rem, 3.8vh, 2.8rem);
       font-weight: 700;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.5vh;
     }
 
     .hourly-rain {
-      font-size: 1.5rem;
+      font-size: clamp(0.9rem, 2vh, 1.3rem);
       font-weight: 600;
       color: var(--accent-blue);
     }
 
     /* Slide 3: 7-Day Forecast */
     .weekly-card {
-      width: 100%;
       max-width: 1350px;
-      border-radius: 3rem;
-      padding: 3rem 4rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
     }
 
     .weekly-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 1.5rem;
+      gap: clamp(0.5rem, 1.5vw, 1.5rem);
       width: 100%;
     }
 
     .weekly-item {
-      border-radius: 1.75rem;
-      padding: 2rem 1rem;
+      border-radius: clamp(1rem, 2vh, 1.75rem);
+      padding: clamp(1.2rem, 2.5vh, 2rem) 1rem;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -469,9 +453,9 @@
     }
 
     .weekly-day {
-      font-size: 2rem;
+      font-size: clamp(1.2rem, 2.8vh, 1.8rem);
       font-weight: 700;
-      margin-bottom: 1rem;
+      margin-bottom: 1vh;
     }
 
     .weekly-icon {
@@ -484,21 +468,21 @@
 
     .weekly-high {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 3.2rem;
+      font-size: clamp(1.8rem, 4vh, 3rem);
       font-weight: 700;
       color: #ffffff;
     }
 
     .weekly-low {
       font-family: 'Space Grotesk', sans-serif;
-      font-size: 2.2rem;
+      font-size: clamp(1.2rem, 2.8vh, 2rem);
       font-weight: 600;
       color: var(--text-muted);
-      margin-bottom: 0.8rem;
+      margin-bottom: 0.8vh;
     }
 
     .weekly-rain {
-      font-size: 1.5rem;
+      font-size: clamp(0.9rem, 2vh, 1.3rem);
       font-weight: 600;
       color: var(--accent-blue);
     }
@@ -535,15 +519,15 @@
 
     /* Animated SVG Icons */
     .weather-svg {
-      width: 180px;
-      height: 180px;
+      width: clamp(100px, 20vh, 180px);
+      height: clamp(100px, 20vh, 180px);
       filter: drop-shadow(0 0 20px rgba(158, 202, 255, 0.3));
       overflow: visible !important;
     }
 
     .grid-svg {
-      width: 80px;
-      height: 80px;
+      width: clamp(50px, 9vh, 90px);
+      height: clamp(50px, 9vh, 90px);
       filter: drop-shadow(0 0 10px rgba(158, 202, 255, 0.25));
       overflow: visible !important;
     }
@@ -656,14 +640,15 @@
   <!-- Top Header -->
   <header>
     <div class="header-left">
-      <div class="loc-badge">
-        <div class="pulse-dot"></div>
-        <span>Christchurch, NZ</span>
+      <div class="location-group">
+        <div class="location-title">
+          <div class="pulse-dot"></div>
+          <span>Christchurch, NZ</span>
+        </div>
+        <div class="sync-status">
+          Last Sync: <span id="lastSyncTime">--:--</span>
+        </div>
       </div>
-      <div class="sync-badge">
-        <span>Sync: <span id="lastSyncTime">--:--</span></span>
-      </div>
-      <div class="header-title">Atmospheric Display</div>
     </div>
     <div class="header-right">
       <div class="clock-time" id="clockTime">--:--:--</div>
