@@ -237,6 +237,7 @@
 
     .header-right {
       text-align: right;
+      white-space: nowrap;
     }
 
     .clock-time {
@@ -245,6 +246,8 @@
       font-weight: 700;
       color: #ffffff;
       line-height: 1;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
     }
 
     .clock-date {
@@ -422,6 +425,7 @@
       justify-content: center;
       align-items: center;
       margin-bottom: 1rem;
+      overflow: visible !important;
     }
 
     .hourly-temp {
@@ -475,6 +479,7 @@
       justify-content: center;
       align-items: center;
       margin-bottom: 1.25rem;
+      overflow: visible !important;
     }
 
     .weekly-high {
@@ -533,12 +538,18 @@
       width: 180px;
       height: 180px;
       filter: drop-shadow(0 0 20px rgba(158, 202, 255, 0.3));
+      overflow: visible !important;
     }
 
     .grid-svg {
       width: 80px;
       height: 80px;
       filter: drop-shadow(0 0 10px rgba(158, 202, 255, 0.25));
+      overflow: visible !important;
+    }
+
+    #heroIconContainer {
+      overflow: visible !important;
     }
 
     @keyframes spinSlow {
