@@ -197,7 +197,7 @@
       display: flex;
       align-items: center;
       gap: 0.8vw;
-      font-size: clamp(3rem, 6vh, 4.5rem);
+      font-size: clamp(3.5rem, 8.5vh, 7rem);
       font-weight: 800;
       color: #ffffff;
       letter-spacing: -0.02em;
@@ -422,6 +422,7 @@
       font-size: clamp(1.6rem, 3.8vh, 2.8rem);
       font-weight: 700;
       margin-bottom: 0.5vh;
+      color: #f87171;
     }
 
     .hourly-rain {
@@ -455,6 +456,7 @@
       font-size: clamp(1.2rem, 2.8vh, 1.8rem);
       font-weight: 700;
       margin-bottom: 1vh;
+      text-transform: uppercase;
     }
 
     .weekly-icon {
@@ -468,13 +470,13 @@
     .weekly-high {
       font-size: clamp(1.8rem, 4vh, 3rem);
       font-weight: 700;
-      color: #ffffff;
+      color: #f87171;
     }
 
     .weekly-low {
       font-size: clamp(1.2rem, 2.8vh, 2rem);
       font-weight: 600;
-      color: var(--text-muted);
+      color: #38bdf8;
       margin-bottom: 0.8vh;
     }
 
@@ -632,6 +634,31 @@
     .slide.active .metric-box:nth-child(4) { animation-delay: 0.34s; }
     .slide.active .metric-box:nth-child(5) { animation-delay: 0.42s; }
     .slide.active .metric-box:nth-child(6) { animation-delay: 0.50s; }
+
+    .data-source-attribution {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: clamp(0.75rem, 1.6vh, 1.1rem);
+      color: rgba(248, 250, 252, 0.35);
+      font-weight: 600;
+      z-index: 110;
+      pointer-events: auto;
+      font-family: 'Outfit', sans-serif;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .data-source-attribution a {
+      color: rgba(248, 250, 252, 0.55);
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(248, 250, 252, 0.3);
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+    .data-source-attribution a:hover {
+      color: #ffffff;
+      border-bottom-color: #ffffff;
+    }
   </style>
 </head>
 <body>
@@ -738,6 +765,11 @@
       </div>
     </div>
   </main>
+
+  <!-- Data Source Attribution -->
+  <div class="data-source-attribution">
+    Weather data sourced from <a href="https://open-meteo.com/" target="_blank">Open-Meteo API</a>
+  </div>
 
   <!-- Synchronized Bottom Progress Bar -->
   <div class="progress-track">
@@ -928,40 +960,21 @@
     }
 
     function getWeatherIconSVG(code, isDay, sizeClass) {
-      const sunGradient = `
-        <defs>
-          <linearGradient id="sun-g" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#FFE082" /><stop offset="100%" stop-color="#FF8F00" />
-          </linearGradient>
-          <linearGradient id="moon-g" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#ECEFF1" /><stop offset="100%" stop-color="#90A4AE" />
-          </linearGradient>
-          <linearGradient id="cloud-s" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#ECEFF1" /><stop offset="100%" stop-color="#90A4AE" />
-          </linearGradient>
-          <linearGradient id="cloud-d" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#546E7A" /><stop offset="100%" stop-color="#263238" />
-          </linearGradient>
-        </defs>
-      `;
-
       // 0. Clear Sky (Sun / Moon)
       if (code === 0) {
         if (isDay) {
           return `
             <svg class="${sizeClass} icon-float" viewBox="0 0 64 64">
-              ${sunGradient}
               <g class="icon-spin">
-                <circle cx="32" cy="32" r="14" fill="url(#sun-g)" filter="drop-shadow(0 0 6px rgba(255, 143, 0, 0.4))" />
-                ${[0, 45, 90, 135, 180, 225, 270, 315].map(deg => `<rect x="30" y="2" width="4" height="8" rx="2" fill="#FFB300" transform="rotate(${deg} 32 32)" />`).join('')}
+                <circle cx="32" cy="32" r="13" stroke="var(--accent-gold)" stroke-width="3" fill="rgba(245, 158, 11, 0.18)" style="filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.4));" />
+                ${[0, 45, 90, 135, 180, 225, 270, 315].map(deg => `<line x1="32" y1="6" x2="32" y2="12" stroke="var(--accent-gold)" stroke-width="3" stroke-linecap="round" transform="rotate(${deg} 32 32)" />`).join('')}
               </g>
             </svg>
           `;
         } else {
           return `
             <svg class="${sizeClass} icon-float" viewBox="0 0 64 64">
-              ${sunGradient}
-              <path d="M42 12 A 20 20 0 1 0 42 52 A 15 15 0 1 1 42 12" fill="url(#moon-g)" filter="drop-shadow(0 0 8px rgba(236, 239, 241, 0.4))" />
+              <path d="M42 12 A 20 20 0 1 0 42 52 A 15 15 0 1 1 42 12" stroke="#e2e8f0" stroke-width="3" fill="rgba(255, 255, 255, 0.12)" style="filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2));" />
               <circle cx="16" cy="18" r="1.5" fill="#fff" class="blink" style="animation: blinker 2s infinite;" />
               <circle cx="48" cy="22" r="2" fill="#fff" class="blink" style="animation-delay: 1s; animation: blinker 2.5s infinite;" />
             </svg>
@@ -971,26 +984,20 @@
 
       // 1, 2. Partly Cloudy
       if (code === 1 || code === 2) {
-        if (isDay) {
-          return `
-            <svg class="${sizeClass} icon-float" viewBox="0 0 64 64">
-              ${sunGradient}
-              <g class="icon-spin" transform="translate(-6, -6) scale(0.85)">
-                <circle cx="32" cy="32" r="14" fill="url(#sun-g)" />
-                ${[0, 45, 90, 135, 180, 225, 270, 315].map(deg => `<rect x="30" y="2" width="4" height="8" rx="2" fill="#FFB300" transform="rotate(${deg} 32 32)" />`).join('')}
-              </g>
-              <path class="icon-drift-cloud" d="M46 48H18C11.4 48 6 42.6 6 36c0-6.2 4.6-11.3 10.6-11.9C17.8 15.6 25 9 33.5 9c9.3 0 17 6.8 18.5 15.8 5.6 1.1 10 5.9 10 11.7 0 6.3-5.2 11.5-11.5 11.5z" fill="url(#cloud-s)" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.2))" />
-            </svg>
-          `;
-        } else {
-          return `
-            <svg class="${sizeClass} icon-float" viewBox="0 0 64 64">
-              ${sunGradient}
-              <path d="M42 12 A 20 20 0 1 0 42 52 A 15 15 0 1 1 42 12" fill="url(#moon-g)" transform="translate(-6, -6) scale(0.85)" />
-              <path class="icon-drift-cloud" d="M46 48H18C11.4 48 6 42.6 6 36c0-6.2 4.6-11.3 10.6-11.9C17.8 15.6 25 9 33.5 9c9.3 0 17 6.8 18.5 15.8 5.6 1.1 10 5.9 10 11.7 0 6.3-5.2 11.5-11.5 11.5z" fill="url(#cloud-s)" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.2))" />
-            </svg>
-          `;
-        }
+        const backgroundIcon = isDay ? `
+          <g class="icon-spin" transform="translate(-6, -6) scale(0.85)">
+            <circle cx="32" cy="32" r="13" stroke="var(--accent-gold)" stroke-width="3" fill="rgba(245, 158, 11, 0.18)" />
+            ${[0, 45, 90, 135, 180, 225, 270, 315].map(deg => `<line x1="32" y1="6" x2="32" y2="12" stroke="var(--accent-gold)" stroke-width="3" stroke-linecap="round" transform="rotate(${deg} 32 32)" />`).join('')}
+          </g>
+        ` : `
+          <path d="M42 12 A 20 20 0 1 0 42 52 A 15 15 0 1 1 42 12" stroke="#e2e8f0" stroke-width="3" fill="rgba(255, 255, 255, 0.12)" transform="translate(-6, -6) scale(0.85)" />
+        `;
+        return `
+          <svg class="${sizeClass} icon-float" viewBox="0 0 64 64">
+            ${backgroundIcon}
+            <path class="icon-drift-cloud" d="M46 44H20C14.5 44 10 39.5 10 34c0-5.5 4.5-10 10-10 1-5 5-9 10-9 6 0 11 4.5 12 10.5 3.5 1 6 4 6 7.5 0 5.5-4.5 10-10 10z" stroke="#ffffff" stroke-width="3" fill="rgba(255, 255, 255, 0.14)" stroke-linejoin="round" />
+          </svg>
+        `;
       }
 
       // 3, 45, 48. Cloudy / Overcast / Fog
@@ -998,9 +1005,8 @@
       if (isCloudy) {
         return `
           <svg class="${sizeClass} icon-float" viewBox="0 0 64 64">
-            ${sunGradient}
-            <path d="M38 40H14C8.4 40 4 35.6 4 30c0-5.2 3.9-9.5 9-10C14 12 20 7 27.5 7c7.8 0 14.3 5.7 15.5 13.2 4.7 1 8.5 5 8.5 9.8 0 5.5-4.5 10-10 10z" fill="url(#cloud-s)" opacity="0.6" transform="translate(8, -4) scale(0.85)" />
-            <path class="icon-drift-cloud" d="M46 48H18C11.4 48 6 42.6 6 36c0-6.2 4.6-11.3 10.6-11.9C17.8 15.6 25 9 33.5 9c9.3 0 17 6.8 18.5 15.8 5.6 1.1 10 5.9 10 11.7 0 6.3-5.2 11.5-11.5 11.5z" fill="url(#cloud-s)" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.2))" />
+            <path d="M38 36H16C11.5 36 8 32.5 8 28c0-4.5 3.5-8 8-8 1-5 5-9 10-9 6 0 11 4.5 12 10.5 3.5 1 6 4 6 7.5 0 4.5-3.5 8-8 8z" stroke="rgba(255, 255, 255, 0.5)" stroke-width="2.5" fill="rgba(255, 255, 255, 0.08)" stroke-linejoin="round" transform="translate(8, -4) scale(0.85)" />
+            <path class="icon-drift-cloud" d="M46 44H20C14.5 44 10 39.5 10 34c0-5.5 4.5-10 10-10 1-5 5-9 10-9 6 0 11 4.5 12 10.5 3.5 1 6 4 6 7.5 0 5.5-4.5 10-10 10z" stroke="#ffffff" stroke-width="3" fill="rgba(255, 255, 255, 0.14)" stroke-linejoin="round" />
           </svg>
         `;
       }
@@ -1009,12 +1015,11 @@
       if (code >= 51 && code <= 55) {
         return `
           <svg class="${sizeClass} icon-float" viewBox="0 0 64 64">
-            ${sunGradient}
-            <path d="M46 38H18C11.4 38 6 32.6 6 26c0-6.2 4.6-11.3 10.6-11.9C17.8 5.6 25 -1 33.5 -1c9.3 0 17 6.8 18.5 15.8 5.6 1.1 10 5.9 10 11.7 0 6.3-5.2 11.5-11.5 11.5z" fill="url(#cloud-s)" />
+            <path d="M46 36H20C14.5 36 10 31.5 10 26c0-5.5 4.5-10 10-10 1-5 5-9 10-9 6 0 11 4.5 12 10.5 3.5 1 6 4 6 7.5 0 5.5-4.5 10-10 10z" stroke="#ffffff" stroke-width="3" fill="rgba(255, 255, 255, 0.14)" stroke-linejoin="round" />
             <g>
-              <line x1="20" y1="42" x2="18" y2="48" stroke="#90CAF9" stroke-width="2" stroke-linecap="round" class="icon-rain-drop" style="animation-delay: 0s;" />
-              <line x1="30" y1="42" x2="28" y2="48" stroke="#90CAF9" stroke-width="2" stroke-linecap="round" class="icon-rain-drop" style="animation-delay: 0.4s;" />
-              <line x1="40" y1="42" x2="38" y2="48" stroke="#90CAF9" stroke-width="2" stroke-linecap="round" class="icon-rain-drop" style="animation-delay: 0.2s;" />
+              <line x1="20" y1="42" x2="18" y2="48" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" class="icon-rain-drop" style="animation-delay: 0s;" />
+              <line x1="30" y1="42" x2="28" y2="48" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" class="icon-rain-drop" style="animation-delay: 0.4s;" />
+              <line x1="40" y1="42" x2="38" y2="48" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" class="icon-rain-drop" style="animation-delay: 0.2s;" />
             </g>
           </svg>
         `;
@@ -1025,12 +1030,11 @@
       if (isRain) {
         return `
           <svg class="${sizeClass} icon-float" viewBox="0 0 64 64">
-            ${sunGradient}
-            <path d="M46 38H18C11.4 38 6 32.6 6 26c0-6.2 4.6-11.3 10.6-11.9C17.8 5.6 25 -1 33.5 -1c9.3 0 17 6.8 18.5 15.8 5.6 1.1 10 5.9 10 11.7 0 6.3-5.2 11.5-11.5 11.5z" fill="url(#cloud-d)" filter="drop-shadow(0 4px 8px rgba(0,0,0,0.3))" />
+            <path d="M46 36H20C14.5 36 10 31.5 10 26c0-5.5 4.5-10 10-10 1-5 5-9 10-9 6 0 11 4.5 12 10.5 3.5 1 6 4 6 7.5 0 5.5-4.5 10-10 10z" stroke="#ffffff" stroke-width="3" fill="rgba(255, 255, 255, 0.14)" stroke-linejoin="round" style="filter: drop-shadow(0 4px 6px rgba(56, 189, 248, 0.15));" />
             <g>
-              <line x1="20" y1="42" x2="17" y2="52" stroke="#42A5F5" stroke-width="3" stroke-linecap="round" class="icon-rain-drop" style="animation-delay: 0s;" />
-              <line x1="30" y1="42" x2="27" y2="52" stroke="#42A5F5" stroke-width="3" stroke-linecap="round" class="icon-rain-drop" style="animation-delay: 0.3s;" />
-              <line x1="40" y1="42" x2="37" y2="52" stroke="#42A5F5" stroke-width="3" stroke-linecap="round" class="icon-rain-drop" style="animation-delay: 0.6s;" />
+              <line x1="20" y1="42" x2="17" y2="52" stroke="#38bdf8" stroke-width="3.5" stroke-linecap="round" class="icon-rain-drop" style="animation-delay: 0s;" />
+              <line x1="30" y1="42" x2="27" y2="52" stroke="#38bdf8" stroke-width="3.5" stroke-linecap="round" class="icon-rain-drop" style="animation-delay: 0.3s;" />
+              <line x1="40" y1="42" x2="37" y2="52" stroke="#38bdf8" stroke-width="3.5" stroke-linecap="round" class="icon-rain-drop" style="animation-delay: 0.6s;" />
             </g>
           </svg>
         `;
@@ -1041,12 +1045,11 @@
       if (isSnow) {
         return `
           <svg class="${sizeClass} icon-float" viewBox="0 0 64 64">
-            ${sunGradient}
-            <path d="M46 38H18C11.4 38 6 32.6 6 26c0-6.2 4.6-11.3 10.6-11.9C17.8 5.6 25 -1 33.5 -1c9.3 0 17 6.8 18.5 15.8 5.6 1.1 10 5.9 10 11.7 0 6.3-5.2 11.5-11.5 11.5z" fill="url(#cloud-s)" />
+            <path d="M46 36H20C14.5 36 10 31.5 10 26c0-5.5 4.5-10 10-10 1-5 5-9 10-9 6 0 11 4.5 12 10.5 3.5 1 6 4 6 7.5 0 5.5-4.5 10-10 10z" stroke="#ffffff" stroke-width="3" fill="rgba(255, 255, 255, 0.14)" stroke-linejoin="round" />
             <g>
-              <circle cx="20" cy="46" r="2.5" fill="#fff" class="icon-snow-flake" style="animation-delay: 0s;" />
-              <circle cx="30" cy="46" r="3" fill="#fff" class="icon-snow-flake" style="animation-delay: 1.2s;" />
-              <circle cx="40" cy="46" r="2.5" fill="#fff" class="icon-snow-flake" style="animation-delay: 0.6s;" />
+              <circle cx="20" cy="46" r="3" fill="#ffffff" class="icon-snow-flake" style="animation-delay: 0s;" />
+              <circle cx="30" cy="46" r="3" fill="#ffffff" class="icon-snow-flake" style="animation-delay: 1.2s;" />
+              <circle cx="40" cy="46" r="3" fill="#ffffff" class="icon-snow-flake" style="animation-delay: 0.6s;" />
             </g>
           </svg>
         `;
@@ -1056,12 +1059,11 @@
       if (code >= 95) {
         return `
           <svg class="${sizeClass} icon-float" viewBox="0 0 64 64">
-            ${sunGradient}
-            <polygon points="26,38 34,38 28,48 38,48 24,62 30,48 24,48" fill="#FFD54F" class="icon-lightning-flash" filter="drop-shadow(0 0 8px #FFD54F)" />
-            <path d="M46 38H18C11.4 38 6 32.6 6 26c0-6.2 4.6-11.3 10.6-11.9C17.8 5.6 25 -1 33.5 -1c9.3 0 17 6.8 18.5 15.8 5.6 1.1 10 5.9 10 11.7 0 6.3-5.2 11.5-11.5 11.5z" fill="url(#cloud-d)" filter="drop-shadow(0 4px 6px rgba(0,0,0,0.4))" />
+            <path d="M46 36H20C14.5 36 10 31.5 10 26c0-5.5 4.5-10 10-10 1-5 5-9 10-9 6 0 11 4.5 12 10.5 3.5 1 6 4 6 7.5 0 5.5-4.5 10-10 10z" stroke="#ffffff" stroke-width="3" fill="rgba(255, 255, 255, 0.14)" stroke-linejoin="round" />
+            <path d="M32 32 L24 44 H32 L28 54 L40 40 H32 Z" stroke="var(--accent-gold)" stroke-width="2.5" fill="var(--accent-gold)" class="icon-lightning-flash" style="filter: drop-shadow(0 0 6px var(--accent-gold));" />
             <g>
-              <line x1="22" y1="42" x2="19" y2="52" stroke="#42A5F5" stroke-width="2.5" stroke-linecap="round" class="icon-rain-drop" style="animation-delay: 0.2s;" />
-              <line x1="38" y1="42" x2="35" y2="52" stroke="#42A5F5" stroke-width="2.5" stroke-linecap="round" class="icon-rain-drop" style="animation-delay: 0.8s;" />
+              <line x1="20" y1="40" x2="18" y2="48" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" class="icon-rain-drop" style="animation-delay: 0.2s;" />
+              <line x1="42" y1="40" x2="40" y2="48" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" class="icon-rain-drop" style="animation-delay: 0.8s;" />
             </g>
           </svg>
         `;
@@ -1070,8 +1072,7 @@
       // Default fallback (Cloudy)
       return `
         <svg class="${sizeClass} icon-float" viewBox="0 0 64 64">
-          ${sunGradient}
-          <path d="M46 48H18C11.4 48 6 42.6 6 36c0-6.2 4.6-11.3 10.6-11.9C17.8 15.6 25 9 33.5 9c9.3 0 17 6.8 18.5 15.8 5.6 1.1 10 5.9 10 11.7 0 6.3-5.2 11.5-11.5 11.5z" fill="url(#cloud-s)" />
+          <path d="M46 44H20C14.5 44 10 39.5 10 34c0-5.5 4.5-10 10-10 1-5 5-9 10-9 6 0 11 4.5 12 10.5 3.5 1 6 4 6 7.5 0 5.5-4.5 10-10 10z" stroke="#ffffff" stroke-width="3" fill="rgba(255, 255, 255, 0.14)" stroke-linejoin="round" />
         </svg>
       `;
     }
@@ -1240,7 +1241,7 @@
       document.getElementById('heroIconContainer').innerHTML = getWeatherIconSVG(c.weatherCode, c.isDay, 'weather-svg');
       document.getElementById('currentTemp').textContent = `${c.temp.toFixed(1)}°`;
       document.getElementById('conditionText').textContent = info.label;
-      document.getElementById('highLowRange').textContent = `H: ${weatherData.todayHigh.toFixed(1)}° | L: ${weatherData.todayLow.toFixed(1)}°`;
+      document.getElementById('highLowRange').innerHTML = `H: <span style="color: #f87171;">${weatherData.todayHigh.toFixed(1)}°</span> | L: <span style="color: #38bdf8;">${weatherData.todayLow.toFixed(1)}°</span>`;
       document.getElementById('currentRainProb').textContent = `${weatherData.todayRain}%`;
 
       // Metrics
@@ -1273,7 +1274,7 @@
       const weeklyContainer = document.getElementById('weeklyGrid');
       weeklyContainer.innerHTML = weatherData.weekly.map((w, idx) => `
         <div class="glass-panel weekly-item" style="--sheen-delay: ${idx * 0.25}s; animation-delay: ${idx * 0.08}s">
-          <div class="weekly-day">${w.day}</div>
+          <div class="weekly-day">${w.day.toUpperCase()}</div>
           <div class="weekly-icon">${getWeatherIconSVG(w.weatherCode, true, 'grid-svg')}</div>
           <div class="weekly-high">${w.high.toFixed(1)}°</div>
           <div class="weekly-low">${w.low.toFixed(1)}°</div>
@@ -1335,16 +1336,23 @@
         let startIndex = data.hourly.time.findIndex(t => t >= currentHourISO);
         if (startIndex === -1) startIndex = 0;
 
+        let apiVisibility = (data.current.visibility || 10000) / 1000;
+        const code = data.current.weather_code;
+        // Meteorological safety clamp: if no fog (45, 48) or precipitation, visibility should be at least 10km
+        if (code !== 45 && code !== 48 && code < 51 && apiVisibility < 10) {
+          apiVisibility = 10.0;
+        }
+
         // Update current
         weatherData.current = {
           temp: data.current.temperature_2m,
           isDay: data.current.is_day === 1,
-          weatherCode: data.current.weather_code,
+          weatherCode: code,
           windSpeed: data.current.wind_speed_10m,
           windDir: data.current.wind_direction_10m,
           precip: data.current.precipitation,
           humidity: data.current.relative_humidity_2m,
-          visibility: (data.current.visibility || 10000) / 1000,
+          visibility: apiVisibility,
           uvIndex: (data.hourly && data.hourly.uv_index && data.hourly.uv_index[startIndex]) || 0
         };
 
