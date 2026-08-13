@@ -51,6 +51,75 @@
       background: radial-gradient(circle at 50% 30%, #0f172a 0%, #030408 100%);
     }
 
+    /* Dynamic sky gradients (Slide 1) */
+    .bg-weather-night {
+      background: radial-gradient(ellipse at 50% 20%, #1e1b4b 0%, #0f172a 45%, #020617 100%);
+    }
+    .bg-weather-sunrise {
+      background: radial-gradient(ellipse at 50% 35%, #fb7185 0%, #f43f5e 35%, #be123c 65%, #0f172a 100%);
+    }
+    .bg-weather-sunset {
+      background: radial-gradient(ellipse at 50% 35%, #f59e0b 0%, #ea580c 40%, #7c2d12 70%, #0f172a 100%);
+    }
+    .bg-weather-day-clear {
+      background: radial-gradient(ellipse at 50% 15%, #0284c7 0%, #0369a1 40%, #0c4a6e 75%, #020617 100%);
+    }
+    .bg-weather-cloudy {
+      background: radial-gradient(ellipse at 50% 20%, #475569 0%, #334155 45%, #0f172a 100%);
+    }
+    .bg-weather-rainy {
+      background: radial-gradient(ellipse at 50% 20%, #0e7490 0%, #155e75 40%, #082f49 70%, #020617 100%);
+    }
+    .bg-weather-stormy {
+      background: radial-gradient(ellipse at 50% 20%, #4338ca 0%, #1e1b4b 40%, #09090b 80%, #000000 100%);
+    }
+
+    /* Dynamic hourly gradients (Slide 2) */
+    .bg-hourly-night {
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #1e1b4b 70%, #030712 100%);
+    }
+    .bg-hourly-sunrise {
+      background: linear-gradient(135deg, #c026d3 0%, #db2777 40%, #9d174d 75%, #0f172a 100%);
+    }
+    .bg-hourly-sunset {
+      background: linear-gradient(135deg, #7c3aed 0%, #991b1b 45%, #4c1d95 75%, #0f172a 100%);
+    }
+    .bg-hourly-day-clear {
+      background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 35%, #0284c7 70%, #020617 100%);
+    }
+    .bg-hourly-cloudy {
+      background: linear-gradient(135deg, #3730a3 0%, #1e1b4b 45%, #020617 100%);
+    }
+    .bg-hourly-rainy {
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #0f172a 100%);
+    }
+    .bg-hourly-stormy {
+      background: linear-gradient(135deg, #18181b 0%, #2e1065 45%, #030712 100%);
+    }
+
+    /* Dynamic weekly gradients (Slide 3) */
+    .bg-forecast-night {
+      background: linear-gradient(225deg, #064e3b 0%, #065f46 40%, #022c22 75%, #020617 100%);
+    }
+    .bg-forecast-sunrise {
+      background: linear-gradient(225deg, #047857 0%, #ca8a04 45%, #022c22 100%);
+    }
+    .bg-forecast-sunset {
+      background: linear-gradient(225deg, #047857 0%, #b45309 45%, #022c22 100%);
+    }
+    .bg-forecast-day-clear {
+      background: linear-gradient(225deg, #059669 0%, #0d9488 40%, #064e3b 75%, #020617 100%);
+    }
+    .bg-forecast-cloudy {
+      background: linear-gradient(225deg, #064e3b 0%, #134e4a 45%, #020617 100%);
+    }
+    .bg-forecast-rainy {
+      background: linear-gradient(225deg, #0f766e 0%, #115e59 45%, #022c22 100%);
+    }
+    .bg-forecast-stormy {
+      background: linear-gradient(225deg, #064e3b 0%, #0f172a 50%, #020617 100%);
+    }
+
     .bg-particles {
       position: absolute;
       inset: 0;
@@ -453,6 +522,7 @@
   <!-- Ambient Dynamic Canvas -->
   <div class="bg-canvas" id="bgCanvas"></div>
   <div class="bg-particles" id="bgParticles"></div>
+  <canvas id="weatherCanvas" style="position: absolute; inset: 0; pointer-events: none; z-index: 2;"></canvas>
 
   <!-- Top Header -->
   <header>
@@ -558,6 +628,125 @@
   <script>
     // Safe, robust Christchurch Weather Engine
     const SLIDE_DURATION = 30000; // 30s per slide (90s total loop)
+
+    // Dynamic Background Gradients Selector
+    function getBackgroundClass(slideNum, isDay, code) {
+      let prefix = 'bg-weather-';
+      if (slideNum === 2) prefix = 'bg-hourly-';
+      if (slideNum === 3) prefix = 'bg-forecast-';
+
+      if (code >= 95) return prefix + 'stormy';
+      if ((code >= 51 && code <= 67) || (code >= 80 && code <= 86)) return prefix + 'rainy';
+      if (code >= 3) return prefix + 'cloudy';
+
+      const hour = new Date().getHours();
+      if (hour >= 6 && hour < 9) return prefix + 'sunrise';
+      if (hour >= 17 && hour < 20) return prefix + 'sunset';
+
+      return isDay ? (prefix + 'day-clear') : (prefix + 'night');
+    }
+
+    // Particle Canvas Animation Loop
+    let canvas, ctx;
+    let particleAnimationId = null;
+    let particles = [];
+    let currentParticleType = 'none';
+
+    function initWeatherCanvas() {
+      canvas = document.getElementById('weatherCanvas');
+      if (!canvas) return;
+      ctx = canvas.getContext('2d');
+      
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+    }
+
+    function resizeCanvas() {
+      if (canvas) {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        if (currentParticleType !== 'none') {
+          createParticles(currentParticleType);
+        }
+      }
+    }
+
+    function createParticles(type) {
+      particles = [];
+      const count = type === 'rain' ? 100 : (type === 'snow' ? 80 : 0);
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          v: type === 'snow' ? (Math.random() * 1.5 + 1) : (Math.random() * 8 + 8),
+          l: type === 'snow' ? (Math.random() * 3 + 2) : (Math.random() * 15 + 15),
+          w: type === 'snow' ? (Math.random() * 0.6 - 0.3) : 0
+        });
+      }
+    }
+
+    function updateWeatherParticles(code) {
+      const isSnow = (code >= 71 && code <= 77) || (code >= 85 && code <= 86);
+      const isRain = (code >= 51 && code <= 67) || (code >= 80 && code <= 82) || (code >= 95);
+      const type = isSnow ? 'snow' : (isRain ? 'rain' : 'none');
+
+      if (type === currentParticleType) return;
+      currentParticleType = type;
+
+      if (particleAnimationId) {
+        cancelAnimationFrame(particleAnimationId);
+        particleAnimationId = null;
+      }
+
+      if (type === 'none') {
+        if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+        return;
+      }
+
+      createParticles(type);
+      animateParticles();
+    }
+
+    function animateParticles() {
+      if (!ctx || !canvas) return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (currentParticleType === 'rain') {
+        ctx.strokeStyle = 'rgba(174, 219, 255, 0.4)';
+        ctx.lineWidth = 1.5;
+        particles.forEach((p) => {
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(p.x - 1, p.y + p.l);
+          ctx.stroke();
+          
+          p.y += p.v;
+          p.x -= p.v * 0.05;
+          
+          if (p.y > canvas.height) {
+            p.y = -p.l;
+            p.x = Math.random() * canvas.width;
+          }
+        });
+      } else if (currentParticleType === 'snow') {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+        particles.forEach((p) => {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.l, 0, Math.PI * 2);
+          ctx.fill();
+
+          p.y += p.v;
+          p.x += Math.sin(p.y * 0.01) * 0.5 + p.w;
+
+          if (p.y > canvas.height) {
+            p.y = -p.l;
+            p.x = Math.random() * canvas.width;
+          }
+        });
+      }
+
+      particleAnimationId = requestAnimationFrame(animateParticles);
+    }
 
     // Weather condition map
     const WEATHER_MAP = {
@@ -701,6 +890,20 @@
     function renderUI() {
       const c = weatherData.current;
       const info = getWeatherInfo(c.weatherCode, c.isDay);
+
+      // Force background update
+      const activeSlide = lastActiveSlide || 1;
+      const bgClass = getBackgroundClass(activeSlide, c.isDay, c.weatherCode);
+      const bgEl = document.getElementById('bgCanvas');
+      if (bgEl) bgEl.className = `bg-canvas ${bgClass}`;
+
+      // Update particle canvas
+      updateWeatherParticles(c.weatherCode);
+
+      // Update stars visibility
+      const showStars = !c.isDay && c.weatherCode < 3;
+      const starsEl = document.getElementById('bgParticles');
+      if (starsEl) starsEl.style.opacity = showStars ? '1' : '0';
 
       // Hero
       document.getElementById('heroIconContainer').innerHTML = getHeroSVG(c.weatherCode, c.isDay);
@@ -858,6 +1061,12 @@
             el.classList.remove('active');
           }
         });
+
+        // Update dynamic background gradient on slide change
+        const c = weatherData.current;
+        const bgClass = getBackgroundClass(activeSlide, c.isDay, c.weatherCode);
+        const bgEl = document.getElementById('bgCanvas');
+        if (bgEl) bgEl.className = `bg-canvas ${bgClass}`;
       }
 
       const slideElapsed = cycleElapsed % SLIDE_DURATION;
@@ -868,6 +1077,7 @@
     }
 
     // Init
+    initWeatherCanvas();
     createStars();
     renderUI();
     updateClock();
