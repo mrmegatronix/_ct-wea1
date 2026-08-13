@@ -147,6 +147,26 @@
       -webkit-backdrop-filter: blur(24px);
       border: 1px solid var(--glass-border);
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px var(--glass-glow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Metallic sheen sweep animation */
+    .glass-panel::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -150%;
+      width: 60%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+      transform: skewX(-25deg);
+      pointer-events: none;
+      animation: sheen-sweep 8s ease-in-out infinite;
+      animation-delay: var(--sheen-delay, 0s);
+    }
+
+    @keyframes sheen-sweep {
+      0% { left: -150%; }
+      20%, 100% { left: 200%; }
     }
 
     /* Header */
@@ -543,7 +563,7 @@
   <main>
     <!-- Slide 1: Current Live Weather -->
     <div class="slide active" id="slide1">
-      <div class="glass-panel hero-card">
+      <div class="glass-panel hero-card" style="--sheen-delay: 0s">
         <div class="hero-center">
           <div id="heroIconContainer" class="icon-float">
             <!-- Animated SVG Icon Injected Here -->
@@ -563,32 +583,32 @@
 
         <!-- 6 Metrics Grid -->
         <div class="metrics-grid">
-          <div class="glass-panel metric-box">
+          <div class="glass-panel metric-box" style="--sheen-delay: 0.2s">
             <div class="metric-icon">💧</div>
             <div class="metric-label">Humidity</div>
             <div class="metric-val" id="valHumidity">68%</div>
           </div>
-          <div class="glass-panel metric-box">
+          <div class="glass-panel metric-box" style="--sheen-delay: 0.4s">
             <div class="metric-icon">☀️</div>
             <div class="metric-label">UV Index</div>
             <div class="metric-val" id="valUV">4.2 Mod</div>
           </div>
-          <div class="glass-panel metric-box">
+          <div class="glass-panel metric-box" style="--sheen-delay: 0.6s">
             <div class="metric-icon" id="windIcon">🧭</div>
             <div class="metric-label">Wind</div>
             <div class="metric-val" id="valWind">18.5 km/h NE</div>
           </div>
-          <div class="glass-panel metric-box">
+          <div class="glass-panel metric-box" style="--sheen-delay: 0.8s">
             <div class="metric-icon">👁️</div>
             <div class="metric-label">Visibility</div>
             <div class="metric-val" id="valVisibility">10.0 km</div>
           </div>
-          <div class="glass-panel metric-box">
+          <div class="glass-panel metric-box" style="--sheen-delay: 1.0s">
             <div class="metric-icon">🌧️</div>
             <div class="metric-label">Precipitation</div>
             <div class="metric-val" id="valPrecip">0.0 mm</div>
           </div>
-          <div class="glass-panel metric-box">
+          <div class="glass-panel metric-box" style="--sheen-delay: 1.2s">
             <div class="metric-icon">🌙</div>
             <div class="metric-label">Moon Phase</div>
             <div class="metric-val" id="valMoon">Waxing Gibb</div>
@@ -922,8 +942,8 @@
 
       // Hourly Grid
       const hourlyContainer = document.getElementById('hourlyGrid');
-      hourlyContainer.innerHTML = weatherData.hourly.map(h => `
-        <div class="glass-panel hourly-item">
+      hourlyContainer.innerHTML = weatherData.hourly.map((h, idx) => `
+        <div class="glass-panel hourly-item" style="--sheen-delay: ${idx * 0.25}s">
           <div class="hourly-time">${h.time}</div>
           <div class="hourly-icon">${h.icon}</div>
           <div class="hourly-temp">${h.temp.toFixed(1)}°</div>
@@ -933,8 +953,8 @@
 
       // Weekly Grid
       const weeklyContainer = document.getElementById('weeklyGrid');
-      weeklyContainer.innerHTML = weatherData.weekly.map(w => `
-        <div class="glass-panel weekly-item">
+      weeklyContainer.innerHTML = weatherData.weekly.map((w, idx) => `
+        <div class="glass-panel weekly-item" style="--sheen-delay: ${idx * 0.25}s">
           <div class="weekly-day">${w.day}</div>
           <div class="weekly-icon">${w.icon}</div>
           <div class="weekly-high">${w.high.toFixed(1)}°</div>
