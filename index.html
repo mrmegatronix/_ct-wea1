@@ -7,7 +7,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-  <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     :root {
       --bg-dark: #030408;
@@ -540,37 +539,6 @@
       overflow: visible !important;
     }
 
-    /* Lucide Icon Theme Colors */
-    svg.lucide {
-      stroke-width: 2.5px;
-    }
-    .lucide-sun {
-      stroke: var(--accent-gold);
-    }
-    .lucide-moon {
-      stroke: var(--text-main);
-    }
-    .lucide-cloud {
-      stroke: #ffffff;
-    }
-    .lucide-cloud-sun {
-      stroke: var(--accent-gold);
-    }
-    .lucide-cloud-moon {
-      stroke: var(--text-main);
-    }
-    .lucide-cloud-rain, .lucide-cloud-drizzle, .lucide-droplet {
-      stroke: var(--accent-blue);
-    }
-    .lucide-cloud-snow {
-      stroke: #ffffff;
-    }
-    .lucide-cloud-lightning {
-      stroke: var(--accent-gold);
-    }
-    .lucide-wind, .lucide-binoculars {
-      stroke: var(--primary);
-    }
 
     #heroIconContainer {
       overflow: visible !important;
@@ -995,40 +963,40 @@
     }
 
     function getWeatherIconSVG(code, isDay, sizeClass) {
-      let name = 'cloud';
-      if (code === 0) name = isDay ? 'sun' : 'moon';
-      else if (code === 1 || code === 2) name = isDay ? 'cloud-sun' : 'cloud-moon';
-      else if (code === 3 || code === 45 || code === 48) name = 'cloud';
-      else if (code >= 51 && code <= 55) name = 'cloud-drizzle';
-      else if (code >= 61 && code <= 67 || code >= 80 && code <= 82) name = 'cloud-rain';
-      else if (code >= 71 && code <= 77 || code >= 85 && code <= 86) name = 'cloud-snow';
-      else if (code >= 95) name = 'cloud-lightning';
+      let name = 'cloudy';
+      if (code === 0) name = isDay ? 'clear-day' : 'clear-night';
+      else if (code === 1 || code === 2) name = isDay ? 'partly-cloudy-day' : 'partly-cloudy-night';
+      else if (code === 3 || code === 45 || code === 48) name = 'cloudy';
+      else if (code >= 51 && code <= 55) name = 'drizzle';
+      else if (code >= 61 && code <= 67 || code >= 80 && code <= 82) name = 'rain';
+      else if (code >= 71 && code <= 77 || code >= 85 && code <= 86) name = 'snow';
+      else if (code >= 95) name = 'thunderstorms-rain';
       
-      return `<i data-lucide="${name}" class="${sizeClass} icon-float"></i>`;
+      return `<img src="https://unpkg.com/@meteocons/svg/fill/${name}.svg" class="${sizeClass}" alt="weather icon" />`;
     }
 
     function getHumiditySVG(sizeClass) {
-      return `<i data-lucide="droplet" class="${sizeClass}"></i>`;
+      return `<img src="https://unpkg.com/@meteocons/svg/fill/humidity.svg" class="${sizeClass}" alt="humidity icon" />`;
     }
 
     function getUVSVG(sizeClass) {
-      return `<i data-lucide="sun" class="${sizeClass}"></i>`;
+      return `<img src="https://unpkg.com/@meteocons/svg/fill/uv-index.svg" class="${sizeClass}" alt="uv icon" />`;
     }
 
     function getWindSVG(sizeClass) {
-      return `<i data-lucide="wind" class="${sizeClass}"></i>`;
+      return `<img src="https://unpkg.com/@meteocons/svg/fill/wind.svg" class="${sizeClass}" alt="wind icon" />`;
     }
 
     function getBinocularsSVG(sizeClass) {
-      return `<i data-lucide="binoculars" class="${sizeClass}"></i>`;
+      return `<img src="https://unpkg.com/@meteocons/svg/fill/mist.svg" class="${sizeClass}" alt="visibility icon" />`;
     }
 
     function getPrecipSVG(sizeClass) {
-      return `<i data-lucide="cloud-rain" class="${sizeClass}"></i>`;
+      return `<img src="https://unpkg.com/@meteocons/svg/fill/raindrop.svg" class="${sizeClass}" alt="precip icon" />`;
     }
 
     function getMoonPhaseSVG(phase, sizeClass) {
-      return `<i data-lucide="moon" class="${sizeClass}"></i>`;
+      return `<img src="https://unpkg.com/@meteocons/svg/fill/moonrise.svg" class="${sizeClass}" alt="moon phase icon" style="transform: scale(0.95); transform-origin: center;" />`;
     }
 
     let currentCanvasLayer = 1;
@@ -1128,10 +1096,6 @@
         </div>
       `).join('');
 
-      // Instantly materialize Lucide CDN Icons
-      if (window.lucide) {
-        lucide.createIcons();
-      }
     }
 
     // Live Clock
