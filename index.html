@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     :root {
       --bg-dark: #030408;
@@ -191,13 +192,13 @@
       display: flex;
       flex-direction: column;
       gap: 0.3vh;
-      align-items: flex-end;
+      align-items: flex-start;
     }
 
     .location-title {
       display: flex;
       align-items: center;
-      justify-content: flex-end;
+      justify-content: flex-start;
       gap: 0.8vw;
       font-size: clamp(3.5rem, 8.5vh, 7rem);
       font-weight: 800;
@@ -210,7 +211,7 @@
       font-size: clamp(1.4rem, 2.8vh, 2rem);
       color: var(--text-muted);
       font-weight: 600;
-      margin-right: calc(14px + 0.8vw);
+      margin-left: calc(14px + 0.8vw);
       letter-spacing: 0.02em;
       text-transform: uppercase;
     }
@@ -539,6 +540,38 @@
       overflow: visible !important;
     }
 
+    /* Lucide Icon Theme Colors */
+    svg.lucide {
+      stroke-width: 2.5px;
+    }
+    .lucide-sun {
+      stroke: var(--accent-gold);
+    }
+    .lucide-moon {
+      stroke: var(--text-main);
+    }
+    .lucide-cloud {
+      stroke: #ffffff;
+    }
+    .lucide-cloud-sun {
+      stroke: var(--accent-gold);
+    }
+    .lucide-cloud-moon {
+      stroke: var(--text-main);
+    }
+    .lucide-cloud-rain, .lucide-cloud-drizzle, .lucide-droplet {
+      stroke: var(--accent-blue);
+    }
+    .lucide-cloud-snow {
+      stroke: #ffffff;
+    }
+    .lucide-cloud-lightning {
+      stroke: var(--accent-gold);
+    }
+    .lucide-wind, .lucide-binoculars {
+      stroke: var(--primary);
+    }
+
     #heroIconContainer {
       overflow: visible !important;
     }
@@ -673,19 +706,19 @@
   <!-- Top Header -->
   <header>
     <div class="header-left">
-      <div class="clock-time" id="clockTime">--:--:--</div>
-      <div class="clock-date" id="clockDate">Loading calendar...</div>
-    </div>
-    <div class="header-right">
       <div class="location-group">
         <div class="location-title">
-          <span>CHRISTCHURCH, NZ</span>
           <div class="pulse-dot"></div>
+          <span>CHRISTCHURCH, NZ</span>
         </div>
         <div class="sync-status">
           Last Sync: <span id="lastSyncTime">--:--</span>
         </div>
       </div>
+    </div>
+    <div class="header-right">
+      <div class="clock-time" id="clockTime">--:--:--</div>
+      <div class="clock-date" id="clockDate">Loading calendar...</div>
     </div>
   </header>
 
@@ -961,212 +994,41 @@
       return 'Waning Crescent';
     }
 
-    function getLucideSun(sizeClass) {
-      return `
-        <svg class="${sizeClass} icon-sun icon-spin" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="4" fill="rgba(245, 158, 11, 0.15)"/>
-          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
-        </svg>
-      `;
-    }
-
-    function getLucideMoon(sizeClass) {
-      return `
-        <svg class="${sizeClass} icon-moon" viewBox="0 0 24 24" fill="none" stroke="var(--text-main)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" fill="rgba(248, 250, 252, 0.15)"/>
-        </svg>
-      `;
-    }
-
-    function getLucideCloud(sizeClass) {
-      return `
-        <svg class="${sizeClass} icon-cloud" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M17.5 19A3.5 3.5 0 0 0 21 15.5c0-2.79-2.54-4.5-5-4.5-.42-1.89-2.18-3-4-3-2.67 0-4.5 2.15-4.5 4.75 0 1.25.55 2.4 1.5 3.25a3.75 3.75 0 0 0 .75 7H17.5Z" fill="rgba(255, 255, 255, 0.1)"/>
-        </svg>
-      `;
-    }
-
-    function getLucideCloudSun(sizeClass) {
-      return `
-        <svg class="${sizeClass} icon-cloud-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2v2M4.93 4.93l1.41 1.41M20 12h2M19.07 4.93l-1.41 1.41" stroke="var(--accent-gold)" />
-          <path d="M17.5 19A3.5 3.5 0 0 0 21 15.5c0-2.79-2.54-4.5-5-4.5-.42-1.89-2.18-3-4-3-2.67 0-4.5 2.15-4.5 4.75 0 1.25.55 2.4 1.5 3.25a3.75 3.75 0 0 0 .75 7H17.5Z" stroke="#ffffff" fill="rgba(255, 255, 255, 0.1)" />
-        </svg>
-      `;
-    }
-
-    function getLucideCloudMoon(sizeClass) {
-      return `
-        <svg class="${sizeClass} icon-cloud-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M17 3a4 4 0 0 0 6 6 6 6 0 1 1-6-6Z" stroke="var(--text-main)" fill="rgba(248, 250, 252, 0.1)" />
-          <path d="M10.14 14.14 A 6 6 0 0 1 18.5 16.5A 3.5 3.5 0 0 0 18.5 11.5c0-2.79-2.54-4.5-5-4.5-.42-1.89-2.18-3-4-3-2.67 0-4.5 2.15-4.5 4.75 0 1.25.55 2.4 1.5 3.25a3.75 3.75 0 0 0 .75 7H10.14Z" stroke="#ffffff" fill="rgba(255, 255, 255, 0.1)" />
-        </svg>
-      `;
-    }
-
-    function getLucideCloudRain(sizeClass) {
-      return `
-        <svg class="${sizeClass} icon-cloud-rain" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M17.5 19A3.5 3.5 0 0 0 21 15.5c0-2.79-2.54-4.5-5-4.5-.42-1.89-2.18-3-4-3-2.67 0-4.5 2.15-4.5 4.75 0 1.25.55 2.4 1.5 3.25a3.75 3.75 0 0 0 .75 7H17.5Z" stroke="#ffffff" fill="rgba(255, 255, 255, 0.1)" />
-          <path d="M8 19v2M12 19v2M16 19v2" stroke="var(--accent-blue)" class="icon-rain-drop" />
-        </svg>
-      `;
-    }
-
-    function getLucideCloudDrizzle(sizeClass) {
-      return `
-        <svg class="${sizeClass} icon-cloud-drizzle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M17.5 19A3.5 3.5 0 0 0 21 15.5c0-2.79-2.54-4.5-5-4.5-.42-1.89-2.18-3-4-3-2.67 0-4.5 2.15-4.5 4.75 0 1.25.55 2.4 1.5 3.25a3.75 3.75 0 0 0 .75 7H17.5Z" stroke="#ffffff" fill="rgba(255, 255, 255, 0.1)" />
-          <path d="M8 19v2M12 19v2M16 19v2" stroke="#60a5fa" class="icon-rain-drop" />
-        </svg>
-      `;
-    }
-
-    function getLucideCloudSnow(sizeClass) {
-      return `
-        <svg class="${sizeClass} icon-cloud-snow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M17.5 19A3.5 3.5 0 0 0 21 15.5c0-2.79-2.54-4.5-5-4.5-.42-1.89-2.18-3-4-3-2.67 0-4.5 2.15-4.5 4.75 0 1.25.55 2.4 1.5 3.25a3.75 3.75 0 0 0 .75 7H17.5Z" stroke="#ffffff" fill="rgba(255, 255, 255, 0.1)" />
-          <path d="M8 17h.01M12 19h.01M16 17h.01M8 21h.01M12 23h.01M16 21h.01" stroke="#e2e8f0" class="icon-snow-flake" />
-        </svg>
-      `;
-    }
-
-    function getLucideCloudLightning(sizeClass) {
-      return `
-        <svg class="${sizeClass} icon-cloud-lightning" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M17.5 19A3.5 3.5 0 0 0 21 15.5c0-2.79-2.54-4.5-5-4.5-.42-1.89-2.18-3-4-3-2.67 0-4.5 2.15-4.5 4.75 0 1.25.55 2.4 1.5 3.25a3.75 3.75 0 0 0 .75 7H17.5Z" stroke="#ffffff" fill="rgba(255, 255, 255, 0.1)" />
-          <path d="m13 16-4 6h4v4l4-6h-4v-4Z" stroke="var(--accent-gold)" fill="var(--accent-gold)" class="icon-lightning-flash" />
-        </svg>
-      `;
-    }
-
     function getWeatherIconSVG(code, isDay, sizeClass) {
-      if (code === 0) {
-        return isDay ? getLucideSun(sizeClass) : getLucideMoon(sizeClass);
-      }
-      if (code === 1 || code === 2) {
-        return isDay ? getLucideCloudSun(sizeClass) : getLucideCloudMoon(sizeClass);
-      }
-      const isCloudy = code === 3 || code === 45 || code === 48;
-      if (isCloudy) {
-        return getLucideCloud(sizeClass);
-      }
-      if (code >= 51 && code <= 55) {
-        return getLucideCloudDrizzle(sizeClass);
-      }
-      const isRain = (code >= 61 && code <= 67) || (code >= 80 && code <= 82);
-      if (isRain) {
-        return getLucideCloudRain(sizeClass);
-      }
-      const isSnow = (code >= 71 && code <= 77) || (code >= 85 && code <= 86);
-      if (isSnow) {
-        return getLucideCloudSnow(sizeClass);
-      }
-      if (code >= 95) {
-        return getLucideCloudLightning(sizeClass);
-      }
-      return getLucideCloud(sizeClass);
+      let name = 'cloud';
+      if (code === 0) name = isDay ? 'sun' : 'moon';
+      else if (code === 1 || code === 2) name = isDay ? 'cloud-sun' : 'cloud-moon';
+      else if (code === 3 || code === 45 || code === 48) name = 'cloud';
+      else if (code >= 51 && code <= 55) name = 'cloud-drizzle';
+      else if (code >= 61 && code <= 67 || code >= 80 && code <= 82) name = 'cloud-rain';
+      else if (code >= 71 && code <= 77 || code >= 85 && code <= 86) name = 'cloud-snow';
+      else if (code >= 95) name = 'cloud-lightning';
+      
+      return `<i data-lucide="${name}" class="${sizeClass} icon-float"></i>`;
     }
 
     function getHumiditySVG(sizeClass) {
-      return `
-        <svg class="${sizeClass}" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 22a7 7 0 0 0 7-7c0-4.3-7-11-7-11S5 10.7 5 15a7 7 0 0 0 7 7z" fill="rgba(56, 189, 248, 0.15)"/>
-        </svg>
-      `;
+      return `<i data-lucide="droplet" class="${sizeClass}"></i>`;
     }
 
     function getUVSVG(sizeClass) {
-      return `
-        <svg class="${sizeClass}" viewBox="0 0 24 24" fill="none" stroke="var(--accent-gold)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="4" fill="rgba(245, 158, 11, 0.15)"/>
-          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
-        </svg>
-      `;
+      return `<i data-lucide="sun" class="${sizeClass}"></i>`;
     }
 
     function getWindSVG(sizeClass) {
-      return `
-        <svg class="${sizeClass}" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/>
-        </svg>
-      `;
+      return `<i data-lucide="wind" class="${sizeClass}"></i>`;
     }
 
     function getBinocularsSVG(sizeClass) {
-      return `
-        <svg class="${sizeClass}" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M8 22a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z" fill="rgba(158, 202, 255, 0.1)"/>
-          <path d="M16 22a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z" fill="rgba(158, 202, 255, 0.1)"/>
-          <path d="M12 14v4M12 18H8M12 18h4"/>
-          <path d="M8 12a4 4 0 0 1 8 0"/>
-          <path d="M12 12V8"/>
-          <path d="M12 8c-3 0-4-3-4-3M12 8c3 0 4-3 4-3"/>
-        </svg>
-      `;
+      return `<i data-lucide="binoculars" class="${sizeClass}"></i>`;
     }
 
     function getPrecipSVG(sizeClass) {
-      return `
-        <svg class="${sizeClass}" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M17.5 19A3.5 3.5 0 0 0 21 15.5c0-2.79-2.54-4.5-5-4.5-.42-1.89-2.18-3-4-3-2.67 0-4.5 2.15-4.5 4.75 0 1.25.55 2.4 1.5 3.25a3.75 3.75 0 0 0 .75 7H17.5Z" fill="rgba(56, 189, 248, 0.1)"/>
-          <path d="M8 19v2M12 19v2M16 19v2"/>
-        </svg>
-      `;
+      return `<i data-lucide="cloud-rain" class="${sizeClass}"></i>`;
     }
 
     function getMoonPhaseSVG(phase, sizeClass) {
-      const darkColor = 'rgba(255,255,255,0.08)';
-      const lightColor = 'var(--text-main)';
-      
-      let fillLeft = darkColor;
-      let fillRight = darkColor;
-      
-      if (phase === 'Full Moon') {
-        fillLeft = lightColor;
-        fillRight = lightColor;
-      } else if (phase === 'New Moon') {
-        fillLeft = darkColor;
-        fillRight = darkColor;
-      } else if (phase === 'First Quarter') {
-        fillLeft = darkColor;
-        fillRight = lightColor;
-      } else if (phase === 'Last Quarter') {
-        fillLeft = lightColor;
-        fillRight = darkColor;
-      } else if (phase.includes('Crescent')) {
-        const isWaning = phase.includes('Waning');
-        const path = isWaning 
-          ? 'M 12 2 A 10 10 0 0 0 12 22 A 8 8 0 0 1 12 2 Z'
-          : 'M 12 2 A 10 10 0 0 1 12 22 A 8 8 0 0 0 12 2 Z';
-        
-        return `
-          <svg class="${sizeClass}" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2.5">
-            <circle cx="12" cy="12" r="10" fill="${darkColor}" />
-            <path d="${path}" fill="${lightColor}" stroke="none" />
-          </svg>
-        `;
-      } else if (phase.includes('Gibbous')) {
-        const isWaning = phase.includes('Waning');
-        const path = isWaning
-          ? 'M 12 2 A 10 10 0 0 0 12 22 A 5 5 0 0 0 12 2 Z'
-          : 'M 12 2 A 10 10 0 0 1 12 22 A 5 5 0 0 1 12 2 Z';
-        
-        return `
-          <svg class="${sizeClass}" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2.5">
-            <circle cx="12" cy="12" r="10" fill="${lightColor}" />
-            <path d="${path}" fill="${darkColor}" stroke="none" />
-          </svg>
-        `;
-      }
-
-      return `
-        <svg class="${sizeClass}" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2.5">
-          <path d="M12 2 A 10 10 0 0 0 12 22 Z" fill="${fillLeft}" />
-          <path d="M12 2 A 10 10 0 0 1 12 22 Z" fill="${fillRight}" />
-          <circle cx="12" cy="12" r="10" stroke="var(--text-muted)" stroke-width="2.5" />
-        </svg>
-      `;
+      return `<i data-lucide="moon" class="${sizeClass}"></i>`;
     }
 
     let currentCanvasLayer = 1;
@@ -1265,6 +1127,11 @@
           <div class="weekly-rain">💧 ${w.rain}%</div>
         </div>
       `).join('');
+
+      // Instantly materialize Lucide CDN Icons
+      if (window.lucide) {
+        lucide.createIcons();
+      }
     }
 
     // Live Clock
