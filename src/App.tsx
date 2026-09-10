@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Background } from './components/Background';
 import { Header } from './components/Header';
 import { CurrentWeatherSlide } from './components/CurrentWeatherSlide';
@@ -48,7 +48,19 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  const SLIDE_DURATION = 30000; // 30 seconds per slide
+  const [slideDuration, setSlideDuration] = useState(30000);
+  const [isPaused, setIsPaused] = useState(false);
+  const [isLocked, setIsLocked] = useState(false);
+  const [hudMessage, setHudMessage] = useState<string | null>(null);
+  const hudTimeoutRef = useRef<number | null>(null);
+  const startTimeRef = useRef<number>(Date.now());
+  const elapsedOffsetRef = useRef<number>(0);
+
+  const showHudToast = useCallback((text: string) => {
+    setHudMessage(text);
+    if (hudTimeoutRef.current) window.clearTimeout(hudTimeoutRef.current);
+    hudTimeoutRef.current = window.setTimeout(() => setHudMessage(null), 1600);
+  }, []);
 
   // 1. Fetch live Christchurch weather
   useEffect(() => {
@@ -131,28 +143,25 @@ export default function App() {
     return () => clearInterval(refreshInterval);
   }, []);
 
-  // 2. Manage slide progression & progress bar using wall-clock time for perfect global sync
+  // 2. Manage slide progression & progress bar
   useEffect(() => {
     if (loading || error) return;
 
     let animationFrameId: number;
 
     const updateSync = () => {
-      const now = Date.now();
-      const cycleTime = now % (SLIDE_DURATION * 3);
-      
-      let newSlide = 1;
-      if (cycleTime < SLIDE_DURATION) newSlide = 1;
-      else if (cycleTime < SLIDE_DURATION * 2) newSlide = 2;
-      else newSlide = 3;
-
-      setCurrentSlide(newSlide);
-
-      // Calculate progress percentage for the current slide
-      const slideElapsed = cycleTime % SLIDE_DURATION;
-      const progress = (slideElapsed / SLIDE_DURATION) * 100;
-      setProgressWidth(progress);
-
+      if (!isPaused && !isLocked) {
+        const now = Date.now();
+        const elapsed = (now - startTimeRef.current) + elapsedOffsetRef.current;
+        if (elapsed >= slideDuration) {
+          setCurrentSlide(prev => (prev >= 3 ? 1 : prev + 1));
+          startTimeRef.current = Date.now();
+          elapsedOffsetRef.current = 0;
+          setProgressWidth(0);
+        } else {
+          setProgressWidth((elapsed / slideDuration) * 100);
+        }
+      }
       animationFrameId = requestAnimationFrame(updateSync);
     };
 
@@ -161,7 +170,100 @@ export default function App() {
     return () => {
       cancelAnimationFrame(animationFrameId);
     };
-  }, [loading, error]);
+  }, [loading, error, isPaused, isLocked, slideDuration]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const tag = (document.activeElement?.tagName || '').toLowerCase();
+      if (tag === 'input' || tag === 'textarea' || tag === 'select' || (document.activeElement as HTMLElement)?.isContentEditable) return;
+
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        setCurrentSlide(prev => (prev <= 1 ? 3 : prev - 1));
+        startTimeRef.current = Date.now();
+        elapsedOffsetRef.current = 0;
+        setProgressWidth(0);
+        showHudToast('Prev Slide');
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        setCurrentSlide(prev => (prev >= 3 ? 1 : prev + 1));
+        startTimeRef.current = Date.now();
+        elapsedOffsetRef.current = 0;
+        setProgressWidth(0);
+        showHudToast('Next Slide');
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        setCurrentSlide(1);
+        startTimeRef.current = Date.now();
+        elapsedOffsetRef.current = 0;
+        setProgressWidth(0);
+        showHudToast('Restart Module');
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (window.parent && window.parent !== window) {
+          window.parent.postMessage({ type: 'SKIP_MODULE' }, '*');
+        }
+        showHudToast('Next Module');
+      } else if (e.key === ' ' || e.code === 'Space') {
+        e.preventDefault();
+        setIsPaused(prev => {
+          const next = !prev;
+          if (next) {
+            elapsedOffsetRef.current += (Date.now() - startTimeRef.current);
+          } else {
+            startTimeRef.current = Date.now();
+          }
+          showHudToast(next ? 'Paused' : 'Playing');
+          return next;
+        });
+      } else if (e.key === 'a' || e.key === 'A') {
+        e.preventDefault();
+        window.open('admin.html', '_blank');
+      } else if (e.key === 'r' || e.key === 'R') {
+        e.preventDefault();
+        window.open('remote.html', '_blank');
+      } else if (e.key >= '1' && e.key <= '9') {
+        e.preventDefault();
+        const secs = parseInt(e.key, 10) * 10;
+        setSlideDuration(secs * 1000);
+        startTimeRef.current = Date.now();
+        elapsedOffsetRef.current = 0;
+        setProgressWidth(0);
+        showHudToast(`Speed: ${secs}s`);
+      } else if (e.key === '0') {
+        e.preventDefault();
+        setIsLocked(prev => {
+          const next = !prev;
+          if (next) {
+            elapsedOffsetRef.current += (Date.now() - startTimeRef.current);
+          } else {
+            startTimeRef.current = Date.now();
+          }
+          showHudToast(next ? 'Slide Locked' : 'Slide Unlocked');
+          return next;
+        });
+      }
+    };
+
+    const handleMessage = (e: MessageEvent) => {
+      if (!e.data) return;
+      if (e.data.type === 'SKIP_MODULE') {
+        if (window.parent && window.parent !== window) window.parent.postMessage({ type: 'SKIP_MODULE' }, '*');
+      } else if (e.data.type === 'GOTO_FIRST') {
+        setCurrentSlide(1);
+        startTimeRef.current = Date.now();
+        elapsedOffsetRef.current = 0;
+        setProgressWidth(0);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('message', handleMessage);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('message', handleMessage);
+    };
+  }, [showHudToast]);
 
   const currentHour = new Date().getHours();
   const isDayGuess = currentHour >= 6 && currentHour < 18;
@@ -238,6 +340,12 @@ export default function App() {
           >
             <div className="absolute right-0 top-0 bottom-0 w-3 bg-white blur-[2px] opacity-80" />
           </div>
+        </div>
+      )}
+
+      {hudMessage && (
+        <div className="fixed bottom-6 right-6 z-[99999] bg-black/85 text-white border border-white/25 px-4 py-2 rounded-xl text-sm font-semibold shadow-2xl tracking-wide pointer-events-none transition-opacity duration-200">
+          {hudMessage}
         </div>
       )}
     </div>
