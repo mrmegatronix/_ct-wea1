@@ -1023,7 +1023,7 @@
       const info = getWeatherInfo(c.weatherCode, c.isDay);
 
       // Force background update
-      const activeSlide = lastActiveSlide || 1;
+      const activeSlide = typeof currentSlide !== 'undefined' ? currentSlide : 1;
       const bgClass = getBackgroundClass(activeSlide, c.isDay, c.weatherCode);
       updateBackgroundGradient(bgClass);
 
