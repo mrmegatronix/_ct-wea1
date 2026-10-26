@@ -931,18 +931,18 @@
     }
 
     function getMoonPhase() {
-      const lp = 2551443;
-      const now = new Date();
-      const newMoon = new Date(1970, 0, 7, 20, 35, 0);
-      const phase = ((now.getTime() - newMoon.getTime()) / 1000) % lp;
-      const age = phase / (24 * 3600);
-      if (age < 1.8) return 'New Moon';
-      if (age < 5.5) return 'Waxing Crescent';
-      if (age < 9.2) return 'First Quarter';
-      if (age < 12.9) return 'Waxing Gibbous';
-      if (age < 16.6) return 'Full Moon';
-      if (age < 20.3) return 'Waning Gibbous';
-      if (age < 24.0) return 'Last Quarter';
+      const synodicDays = 29.530588853;
+      const nowMs = Date.now();
+      const refNewMoonMs = Date.UTC(2000, 0, 6, 18, 14, 0);
+      const daysSince = (nowMs - refNewMoonMs) / 86400000;
+      const age = ((daysSince % synodicDays) + synodicDays) % synodicDays;
+      if (age < 1.84566 || age >= 27.68493) return 'New Moon';
+      if (age < 5.53699) return 'Waxing Crescent';
+      if (age < 9.22831) return 'First Quarter';
+      if (age < 12.91963) return 'Waxing Gibbous';
+      if (age < 16.61096) return 'Full Moon';
+      if (age < 20.30228) return 'Waning Gibbous';
+      if (age < 23.99361) return 'Last Quarter';
       return 'Waning Crescent';
     }
 
@@ -952,7 +952,7 @@
       else if (code === 1 || code === 2) name = isDay ? 'partly-cloudy-day' : 'partly-cloudy-night';
       else if (code === 3 || code === 45 || code === 48) name = 'cloudy';
       else if (code >= 51 && code <= 55) name = 'drizzle';
-      else if (code >= 61 && code <= 67 || code >= 80 && code <= 82) name = 'rain';
+      else if (code >= 61 && code <= 67 || code >= 80 && code >= 80 && code <= 82) name = 'rain';
       else if (code >= 71 && code <= 77 || code >= 85 && code <= 86) name = 'snow';
       else if (code >= 95) name = 'thunderstorms-rain';
       
@@ -980,7 +980,18 @@
     }
 
     function getMoonPhaseSVG(phase, sizeClass) {
-      return `<img src="https://unpkg.com/@meteocons/svg/fill/moonrise.svg" class="${sizeClass}" alt="moon phase icon" style="transform: scale(0.95); transform-origin: center;" />`;
+      const phaseIconMap = {
+        'New Moon': 'moon-new',
+        'Waxing Crescent': 'moon-waxing-crescent',
+        'First Quarter': 'moon-first-quarter',
+        'Waxing Gibbous': 'moon-waxing-gibbous',
+        'Full Moon': 'moon-full',
+        'Waning Gibbous': 'moon-waning-gibbous',
+        'Last Quarter': 'moon-last-quarter',
+        'Waning Crescent': 'moon-waning-crescent'
+      };
+      const iconName = phaseIconMap[phase] || 'moon-full';
+      return `<img src="https://unpkg.com/@meteocons/svg/fill/${iconName}.svg" class="${sizeClass}" alt="${phase}" style="transform: scale(0.95); transform-origin: center;" />`;
     }
 
     let currentCanvasLayer = 1;
