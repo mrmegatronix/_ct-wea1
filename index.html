@@ -159,16 +159,17 @@
       position: absolute;
       top: 0; left: -150%;
       width: 60%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.06), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.18) 50%, rgba(255, 255, 255, 0.05) 75%, transparent);
       transform: skewX(-25deg);
       pointer-events: none;
-      animation: sheen-sweep 8s ease-in-out infinite;
+      z-index: 2;
+      animation: sheen-sweep 6s ease-in-out infinite;
       animation-delay: var(--sheen-delay, 0s);
     }
 
     @keyframes sheen-sweep {
       0% { left: -150%; }
-      20%, 100% { left: 200%; }
+      25%, 100% { left: 200%; }
     }
 
     @keyframes blinkColon {
